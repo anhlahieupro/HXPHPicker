@@ -138,7 +138,8 @@ class VideoEditorMusicView: UIView {
         button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 0)
         button.tintColor = .white
         button.addTarget(self, action: #selector(didButtonClick(button:)), for: .touchUpInside)
-        button.isHidden = musics.isEmpty
+        // button.isHidden = musics.isEmpty
+        button.isHidden = true
         button.alpha = musics.isEmpty ? 0 : 1
         return button
     }()
@@ -254,10 +255,12 @@ class VideoEditorMusicView: UIView {
         collectionView.reloadData()
         isloading = false
         backgroundButton.isHidden = infos.isEmpty
-        showLyricButton.isHidden = infos.isEmpty
+        // showLyricButton.isHidden = infos.isEmpty
+        showLyricButton.isHidden = true
         if !infos.isEmpty {
             backgroundButton.isHidden = false
-            showLyricButton.isHidden = false
+            // showLyricButton.isHidden = false
+            showLyricButton.isHidden = true
         }
         UIView.animate(withDuration: 0.25) {
             self.backgroundButton.alpha = infos.isEmpty ? 0 : 1

@@ -296,8 +296,15 @@ open class VideoEditorViewController: BaseViewController {
     }()
     lazy var topView: UIView = {
         let view = UIView.init(frame: CGRect(x: 0, y: 0, width: 0, height: 44))
-        let cancelBtn = UIButton.init(frame: CGRect(x: 0, y: 0, width: 57, height: 44))
-        cancelBtn.setImage(UIImage.image(for: "hx_editor_back"), for: .normal)
+        let cancelBtn = UIButton.init(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
+
+        if #available(iOS 13.0, *) {
+            cancelBtn.setImage(UIImage(systemName: "xmark"), for: .normal)
+            cancelBtn.tintColor = .white
+        } else {
+            cancelBtn.setImage(UIImage.image(for: "hx_editor_back"), for: .normal)
+        }
+
         cancelBtn.addTarget(self, action: #selector(didBackClick), for: .touchUpInside)
         view.addSubview(cancelBtn)
         return view
@@ -506,14 +513,26 @@ open class VideoEditorViewController: BaseViewController {
         topMaskLayer.frame = CGRect(x: 0, y: 0, width: view.width, height: topView.frame.maxY + 10)
         cropView.frame = CGRect(x: 0, y: toolView.y - (UIDevice.isPortrait ? 100 : 90), width: view.width, height: 100)
         cropConfirmView.frame = toolView.frame
+
+        var videoViewY: CGFloat = 0
+        if let modalPresentationStyle = navigationController?.modalPresentationStyle, UIDevice.isPortrait {
+            if modalPresentationStyle == .fullScreen || modalPresentationStyle == .custom {
+                videoViewY = UIDevice.generalStatusBarHeight
+            }
+        } else if (modalPresentationStyle == .fullScreen || modalPresentationStyle == .custom) && UIDevice.isPortrait {
+            videoViewY = UIDevice.generalStatusBarHeight
+        }
+
+        videoView.frame = CGRect(x: 0, y: videoViewY,
+                                 width: UIScreen.main.bounds.width,
+                                 height: UIScreen.main.bounds.height * 0.83)
+
         if !videoView.frame.equalTo(view.bounds) && !videoView.frame.isEmpty && !videoViewDidChange {
-            videoView.frame = view.bounds
             videoView.reset(false)
             videoView.finishCropping(false)
             orientationDidChange = true
-        }else {
-            videoView.frame = view.bounds
         }
+
         if toolOptions.contains(.cropSize) {
             let cropToolFrame = CGRect(x: 0, y: toolView.y - 60, width: view.width, height: 60)
             cropConfirmView.frame = toolView.frame

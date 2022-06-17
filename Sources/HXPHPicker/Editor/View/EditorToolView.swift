@@ -60,7 +60,9 @@ public class EditorToolView: UIView {
     
     public lazy var finishButton: UIButton = {
         let finishButton = UIButton.init(type: .custom)
-        finishButton.setTitle("完成".localized, for: .normal)
+
+        finishButton.setTitle("Next", for: .normal)
+
         finishButton.titleLabel?.font = UIFont.mediumPingFang(ofSize: 16)
         finishButton.layer.cornerRadius = 3
         finishButton.layer.masksToBounds = true
@@ -83,18 +85,24 @@ public class EditorToolView: UIView {
         configColor()
     }
     func configColor() {
-        let isDark = PhotoManager.isDark
-        finishButton.setTitleColor(
-            isDark ? config.finishButtonTitleDarkColor : config.finishButtonTitleColor,
-            for: .normal
-        )
-        finishButton.setBackgroundImage(
-            UIImage.image(
-                for: isDark ? config.finishButtonDarkBackgroundColor : config.finishButtonBackgroundColor,
-                havingSize: .zero
-            ),
-            for: .normal
-        )
+
+        finishButton.tintColor = .white
+        finishButton.backgroundColor = .systemRed
+
+        /*
+         let isDark = PhotoManager.isDark
+         finishButton.setTitleColor(
+         isDark ? config.finishButtonTitleDarkColor : config.finishButtonTitleColor,
+         for: .normal
+         )
+         finishButton.setBackgroundImage(
+         UIImage.image(
+         for: isDark ? config.finishButtonDarkBackgroundColor : config.finishButtonBackgroundColor,
+         havingSize: .zero
+         ),
+         for: .normal
+         )
+         */
     }
     func deselected() {
         if let indexPath = currentSelectedIndexPath {
@@ -132,17 +140,22 @@ public class EditorToolView: UIView {
             width: width,
             height: stretchMask ? height + 70 : height + 10
         )
-        var finishWidth = (finishButton.currentTitle?.width(
-                            ofFont: finishButton.titleLabel!.font,
-                            maxHeight: 33) ?? 0) + 20
-        if finishWidth < 60 {
-            finishWidth = 60
-        }
-        finishButton.width = finishWidth
-        finishButton.height = 33
-        finishButton.x = width - finishButton.width - 12 - UIDevice.rightMargin
+        
+        /*
+         var finishWidth = (finishButton.currentTitle?.width(
+         ofFont: finishButton.titleLabel!.font,
+         maxHeight: 33) ?? 0) + 20
+         if finishWidth < 60 {
+         finishWidth = 60
+         }
+         */
+        
+        finishButton.layer.cornerRadius = 5
+        finishButton.width = 70
+        finishButton.height = 40
+        finishButton.x = width - finishButton.width - 15 - UIDevice.rightMargin
         finishButton.centerY = 25
-        collectionView.width = finishButton.x
+        collectionView.width = finishButton.x - 10
     }
     
     required init?(coder: NSCoder) {
