@@ -194,6 +194,13 @@ public class VideoEditorMusicView: UIView {
         addSubview(bgView)
         layer.addSublayer(bgMaskLayer)
         addSubview(collectionView)
+
+        addSubview(discoverBgView)
+        addSubview(discoverButton)
+
+        addSubview(favoritesBgView)
+        addSubview(favoritesButton)
+
         if config.showSearch {
             addSubview(searchBgView)
         }
@@ -342,6 +349,15 @@ public class VideoEditorMusicView: UIView {
 //                                    width: searchButtonWidth,
 //                                    height: 30)
 
+        discoverBgView.x = UIDevice.leftMargin + margin
+        discoverBgView.y = topMargin
+
+        favoritesBgView.x = discoverBgView.frame.maxX + 4
+        favoritesBgView.y = topMargin
+
+        discoverButton.center = discoverBgView.center
+        favoritesButton.center = favoritesBgView.center
+
         searchBgView.frame = CGRect(
             x: width - UIDevice.rightMargin - margin - volumeButtonWidth,
             y: topMargin,
@@ -441,6 +457,52 @@ public class VideoEditorMusicView: UIView {
     var isLoading = false
     var isLoadMore = false
     var hasMore = true
+
+    lazy var discoverBgView: UIVisualEffectView = {
+        let visualEffect = UIBlurEffect.init(style: .light)
+        let view = UIVisualEffectView.init(effect: visualEffect)
+        view.frame = CGRect(origin: .zero, size: CGSize(width: 100, height: 30))
+        view.layer.cornerRadius = 15
+        view.layer.masksToBounds = true
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.2)
+        return view
+    }()
+    lazy var favoritesBgView: UIVisualEffectView = {
+        let visualEffect = UIBlurEffect.init(style: .light)
+        let view = UIVisualEffectView.init(effect: visualEffect)
+        view.frame = CGRect(origin: .zero, size: CGSize(width: 100, height: 30))
+        view.layer.cornerRadius = 15
+        view.layer.masksToBounds = true
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.2)
+        view.isHidden = true
+        return view
+    }()
+    lazy var discoverButton: UIButton = {
+        let button = UIButton(frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 30)))
+        button.setTitle("Discover", for: .normal)
+        button.titleLabel?.font = .mediumPingFang(ofSize: 14)
+        button.tintColor = .white
+        button.addTarget(self, action: #selector(didDiscoverButtonClick), for: .touchUpInside)
+        return button
+    }()
+    lazy var favoritesButton: UIButton = {
+        let button = UIButton(frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 30)))
+        button.setTitle("Favorites", for: .normal)
+        button.titleLabel?.font = .mediumPingFang(ofSize: 14)
+        button.tintColor = .white
+        button.addTarget(self, action: #selector(didFavoritesButtonClick), for: .touchUpInside)
+        return button
+    }()
+
+    @objc func didDiscoverButtonClick() {
+        discoverBgView.isHidden = false
+        favoritesBgView.isHidden = true
+    }
+
+    @objc func didFavoritesButtonClick() {
+        discoverBgView.isHidden = true
+        favoritesBgView.isHidden = false
+    }
 }
 
 extension VideoEditorMusicView: UICollectionViewDataSource,
