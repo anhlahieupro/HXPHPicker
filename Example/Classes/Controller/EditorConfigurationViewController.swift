@@ -274,6 +274,12 @@ extension EditorConfigurationViewController: VideoEditorViewControllerDelegate {
         }
         return true
     }
+
+    func loadMoreMusicView(_ musicView: VideoEditorMusicView,
+                           completion: @escaping ([VideoEditorMusicInfo], Bool) -> Void) {
+
+    }
+
     func videoEditorViewController(
         _ videoEditorViewController: VideoEditorViewController,
         didSearch text: String?,

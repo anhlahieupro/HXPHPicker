@@ -302,7 +302,7 @@ public class VideoEditorMusicView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         bgMaskLayer.frame = bounds
         let margin: CGFloat = 30
@@ -412,10 +412,10 @@ public class VideoEditorMusicView: UIView {
 extension VideoEditorMusicView: UICollectionViewDataSource,
                                 UICollectionViewDelegate,
                                 UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         musics.count
     }
-    func collectionView(
+    public func collectionView(
         _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
@@ -426,7 +426,7 @@ extension VideoEditorMusicView: UICollectionViewDataSource,
         cell.music = musics[indexPath.item]
         return cell
     }
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: false)
         /*
         let offsetX = pageWidth * CGFloat(indexPath.item)
@@ -443,7 +443,7 @@ extension VideoEditorMusicView: UICollectionViewDataSource,
         //}
     }
     
-    func scrollViewWillEndDragging(
+    public func scrollViewWillEndDragging(
         _ scrollView: UIScrollView,
         withVelocity velocity: CGPoint,
         targetContentOffset: UnsafeMutablePointer<CGPoint>
@@ -471,14 +471,14 @@ extension VideoEditorMusicView: UICollectionViewDataSource,
         targetContentOffset.pointee.x = offsetX
         */
     }
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         /*
         if !scrollView.isTracking && config.autoPlayWhenScrollingStops {
             playMusic()
         }
         */
     }
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         /*
         if !decelerate {
             if selectedIndex == -1 { return }
@@ -488,7 +488,7 @@ extension VideoEditorMusicView: UICollectionViewDataSource,
         */
     }
  
-    func playMusic() {
+    public func playMusic() {
         if selectedIndex == -1 { return }
         if currentPlayIndex == selectedIndex { return }
         stopMusic()
@@ -520,7 +520,7 @@ extension VideoEditorMusicView: UICollectionViewDataSource,
         })
         currentPlayIndex = selectedIndex
     }
-    func stopMusic() {
+    public func stopMusic() {
         if let beforeCell = collectionView.cellForItem(
             at: IndexPath(
                 item: currentPlayIndex,
@@ -545,7 +545,7 @@ extension VideoEditorMusicView: UICollectionViewDataSource,
 }
 
 extension VideoEditorMusicView {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offsetY = scrollView.contentOffset.y
         let contentHeight = scrollView.contentSize.height
         let maxOffsetY = contentHeight - scrollView.height + scrollView.contentInset.bottom
