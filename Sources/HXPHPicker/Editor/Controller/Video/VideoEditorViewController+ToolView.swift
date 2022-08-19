@@ -218,6 +218,8 @@ extension VideoEditorViewController: EditorToolViewDelegate {
         toolView.deselected()
         videoView.drawEnabled = false
         hiddenBrushColorView()
+
+        /*
         if musicView.musics.isEmpty {
             if let loadHandler = config.music.handler {
                 let showLoading = loadHandler { [weak self] infos in
@@ -251,6 +253,9 @@ extension VideoEditorViewController: EditorToolViewDelegate {
                 }
             }
         }
+        */
+        musicView.didDiscoverButtonClick()
+
         isMusicState = !isMusicState
         musicView.reloadContentOffset()
         updateMusicView()

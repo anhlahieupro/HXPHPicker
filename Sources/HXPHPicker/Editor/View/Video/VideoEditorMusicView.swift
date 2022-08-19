@@ -504,6 +504,8 @@ public class VideoEditorMusicView: UIView {
         discoverBgView.isHidden = false
         favoritesBgView.isHidden = true
 
+        musics.removeAll()
+        collectionView.reloadData()
         delegate?.discoverMusicView(
             self,
             completion: { [weak self] musicInfos, hasMore in
@@ -518,6 +520,8 @@ public class VideoEditorMusicView: UIView {
         discoverBgView.isHidden = true
         favoritesBgView.isHidden = false
 
+        musics.removeAll()
+        collectionView.reloadData()
         delegate?.favoritesMusicView(
             self,
             completion: { [weak self] musicInfos, hasMore in
