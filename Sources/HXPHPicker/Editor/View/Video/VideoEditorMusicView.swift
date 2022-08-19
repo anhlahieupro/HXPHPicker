@@ -14,6 +14,9 @@ protocol VideoEditorMusicViewDelegate: AnyObject {
     func musicView(didVolumeButton musicView: VideoEditorMusicView)
     func musicView(_ musicView: VideoEditorMusicView, didOriginalSoundButtonClick isSelected: Bool)
     func musicView(_ musicView: VideoEditorMusicView, didShowLyricButton isSelected: Bool, music: VideoEditorMusic?)
+
+    func loadMoreMusicView(_ musicView: VideoEditorMusicView,
+                           completion: @escaping ([VideoEditorMusicInfo], Bool) -> Void)
 }
 
 class VideoEditorMusicView: UIView {
@@ -400,6 +403,10 @@ class VideoEditorMusicView: UIView {
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
+
+    var isLoading = false
+    var isLoadMore = false
+    var hasMore = true
 }
 
 extension VideoEditorMusicView: UICollectionViewDataSource,
@@ -534,5 +541,49 @@ extension VideoEditorMusicView: UICollectionViewDataSource,
         }
         currentPlayIndex = -2
         delegate?.musicView(deselectMusic: self)
+    }
+}
+
+extension VideoEditorMusicView {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let maxOffsetY = contentHeight - scrollView.height + scrollView.contentInset.bottom
+        if offsetY > maxOffsetY - 100 && hasMore {
+            if !isLoadMore && !isLoading && !musics.isEmpty {
+                isLoadMore = true
+                // startLoading(isMore: true)
+                
+                delegate?.loadMoreMusicView(
+                    self,
+                    completion: { [weak self] musicInfos, hasMore in
+                        guard let self = self else { return }
+                        // self.stopLoading()
+                        // let musics = self.getMusics(infos: musicInfos)
+
+                        for musicInfo in musicInfos {
+                            let music = VideoEditorMusic(
+                                audioURL: musicInfo.audioURL,
+                                lrc: musicInfo.lrc
+                            )
+
+                            self.musics.append(music)
+                        }
+
+                        self.collectionView.reloadData()
+
+                        //                        DispatchQueue.main.async {
+                        //                            if !hasMore {
+                        //                                self.addNoMore()
+                        //                            }else {
+                        //                                self.removeNoMore()
+                        //                            }
+                        //                        }
+
+                        self.hasMore = hasMore
+                        self.isLoadMore = false
+                    })
+            }
+        }
     }
 }
