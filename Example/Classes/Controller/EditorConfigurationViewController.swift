@@ -280,6 +280,16 @@ extension EditorConfigurationViewController: VideoEditorViewControllerDelegate {
 
     }
 
+    func discoverMusicView(_ musicView: VideoEditorMusicView,
+                           completion: @escaping ([VideoEditorMusicInfo], Bool) -> Void) {
+
+    }
+
+    func favoritesMusicView(_ musicView: VideoEditorMusicView,
+                            completion: @escaping ([VideoEditorMusicInfo], Bool) -> Void) {
+
+    }
+
     func videoEditorViewController(
         _ videoEditorViewController: VideoEditorViewController,
         didSearch text: String?,

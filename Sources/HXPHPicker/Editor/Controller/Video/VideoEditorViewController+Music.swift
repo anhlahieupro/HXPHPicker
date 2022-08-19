@@ -77,6 +77,22 @@ extension VideoEditorViewController: VideoEditorMusicViewDelegate {
                                     completion: completion)
         
     }
+    
+    func discoverMusicView(_ musicView: VideoEditorMusicView,
+                           completion: @escaping ([VideoEditorMusicInfo], Bool) -> Void) {
+        
+        delegate?.discoverMusicView(musicView,
+                                    completion: completion)
+        
+    }
+    
+    func favoritesMusicView(_ musicView: VideoEditorMusicView,
+                            completion: @escaping ([VideoEditorMusicInfo], Bool) -> Void) {
+        
+        delegate?.favoritesMusicView(musicView,
+                                     completion: completion)
+        
+    }
 }
 
 // MARK: VideoEditorSearchMusicViewDelegate

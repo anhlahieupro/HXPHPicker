@@ -210,6 +210,16 @@ extension PhotoPickerViewController: VideoEditorViewControllerDelegate {
 
     }
 
+    public func discoverMusicView(_ musicView: VideoEditorMusicView,
+                                  completion: @escaping ([VideoEditorMusicInfo], Bool) -> Void) {
+
+    }
+
+    public func favoritesMusicView(_ musicView: VideoEditorMusicView,
+                                   completion: @escaping ([VideoEditorMusicInfo], Bool) -> Void) {
+
+    }
+
     public func videoEditorViewController(
         _ videoEditorViewController: VideoEditorViewController,
         didSearch text: String?,

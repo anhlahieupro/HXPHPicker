@@ -17,6 +17,12 @@ protocol VideoEditorMusicViewDelegate: AnyObject {
 
     func loadMoreMusicView(_ musicView: VideoEditorMusicView,
                            completion: @escaping ([VideoEditorMusicInfo], Bool) -> Void)
+
+    func discoverMusicView(_ musicView: VideoEditorMusicView,
+                           completion: @escaping ([VideoEditorMusicInfo], Bool) -> Void)
+
+    func favoritesMusicView(_ musicView: VideoEditorMusicView,
+                            completion: @escaping ([VideoEditorMusicInfo], Bool) -> Void)
 }
 
 public class VideoEditorMusicView: UIView {
@@ -497,11 +503,45 @@ public class VideoEditorMusicView: UIView {
     @objc func didDiscoverButtonClick() {
         discoverBgView.isHidden = false
         favoritesBgView.isHidden = true
+
+        delegate?.discoverMusicView(
+            self,
+            completion: { [weak self] musicInfos, hasMore in
+                guard let self = self else { return }
+
+                self.musics.removeAll()
+                self.updateData(musicInfos: musicInfos, hasMore: hasMore)
+            })
     }
 
     @objc func didFavoritesButtonClick() {
         discoverBgView.isHidden = true
         favoritesBgView.isHidden = false
+
+        delegate?.favoritesMusicView(
+            self,
+            completion: { [weak self] musicInfos, hasMore in
+                guard let self = self else { return }
+
+                self.musics.removeAll()
+                self.updateData(musicInfos: musicInfos, hasMore: hasMore)
+            })
+    }
+
+    private func updateData(musicInfos: [VideoEditorMusicInfo], hasMore: Bool) {
+        for musicInfo in musicInfos {
+            let music = VideoEditorMusic(
+                audioURL: musicInfo.audioURL,
+                lrc: musicInfo.lrc
+            )
+
+            self.musics.append(music)
+        }
+
+        self.collectionView.reloadData()
+
+        self.hasMore = hasMore
+        self.isLoadMore = false
     }
 }
 
@@ -648,36 +688,12 @@ extension VideoEditorMusicView {
         if offsetY > maxOffsetY - 100 && hasMore {
             if !isLoadMore && !isLoading && !musics.isEmpty {
                 isLoadMore = true
-                // startLoading(isMore: true)
                 
                 delegate?.loadMoreMusicView(
                     self,
                     completion: { [weak self] musicInfos, hasMore in
                         guard let self = self else { return }
-                        // self.stopLoading()
-                        // let musics = self.getMusics(infos: musicInfos)
-
-                        for musicInfo in musicInfos {
-                            let music = VideoEditorMusic(
-                                audioURL: musicInfo.audioURL,
-                                lrc: musicInfo.lrc
-                            )
-
-                            self.musics.append(music)
-                        }
-
-                        self.collectionView.reloadData()
-
-                        //                        DispatchQueue.main.async {
-                        //                            if !hasMore {
-                        //                                self.addNoMore()
-                        //                            }else {
-                        //                                self.removeNoMore()
-                        //                            }
-                        //                        }
-
-                        self.hasMore = hasMore
-                        self.isLoadMore = false
+                        self.updateData(musicInfos: musicInfos, hasMore: hasMore)
                     })
             }
         }

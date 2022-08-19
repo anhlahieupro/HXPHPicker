@@ -246,6 +246,12 @@ public protocol VideoEditorViewControllerDelegate: AnyObject {
     func loadMoreMusicView(_ musicView: VideoEditorMusicView,
                            completion: @escaping ([VideoEditorMusicInfo], Bool) -> Void)
     
+    func discoverMusicView(_ musicView: VideoEditorMusicView,
+                           completion: @escaping ([VideoEditorMusicInfo], Bool) -> Void)
+    
+    func favoritesMusicView(_ musicView: VideoEditorMusicView,
+                            completion: @escaping ([VideoEditorMusicInfo], Bool) -> Void)
+    
     /// 搜索配乐信息
     /// - Parameters:
     ///   - videoEditorViewController: 对应的 VideoEditorViewController
