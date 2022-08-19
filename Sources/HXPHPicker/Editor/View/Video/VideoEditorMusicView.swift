@@ -184,10 +184,14 @@ public class VideoEditorMusicView: UIView {
     var musics: [VideoEditorMusic] = []
     let config: VideoEditorConfiguration.Music
     var didEnterPlayGround = false
-    init(config: VideoEditorConfiguration.Music) {
+
+    var viewHeight: CGFloat = UIScreen.main.bounds.height / 3
+    init(config: VideoEditorConfiguration.Music, viewHeight: CGFloat) {
+        self.viewHeight = viewHeight
         self.config = config
         super.init(frame: .zero)
         setMusics(infos: config.infos)
+        addSubview(bgView)
         layer.addSublayer(bgMaskLayer)
         addSubview(collectionView)
         if config.showSearch {
@@ -210,6 +214,12 @@ public class VideoEditorMusicView: UIView {
             object: nil
         )
     }
+    lazy var bgView: UIVisualEffectView = {
+        let visualEffect = UIBlurEffect.init(style: .dark)
+        let view = UIVisualEffectView.init(effect: visualEffect)
+        return view
+    }()
+
     @objc func appDidEnterBackground() {
         if backgroundButton.isSelected && currentPlayIndex != -2 {
             beforeIsSelect = true
@@ -304,7 +314,9 @@ public class VideoEditorMusicView: UIView {
     
     public override func layoutSubviews() {
         super.layoutSubviews()
+        bgView.frame = bounds
         bgMaskLayer.frame = bounds
+        let topMargin: CGFloat = 20
         let margin: CGFloat = 30
         let searchTextWidth = searchButton.currentTitle?.width(
             ofFont: UIFont.mediumPingFang(ofSize: 14),
@@ -314,7 +326,7 @@ public class VideoEditorMusicView: UIView {
         if searchButtonWidth < 65 {
             searchButtonWidth = 65
         }
-        searchBgView.frame = CGRect(x: UIDevice.leftMargin + margin, y: 0, width: searchButtonWidth, height: 30)
+        searchBgView.frame = CGRect(x: UIDevice.leftMargin + margin, y: topMargin, width: searchButtonWidth, height: 30)
         searchButton.frame = searchBgView.bounds
         
         let volumeTextWidth = volumeButton.currentTitle?.width(
@@ -327,14 +339,14 @@ public class VideoEditorMusicView: UIView {
         }
         volumeBgView.frame = CGRect(
             x: width - UIDevice.rightMargin - margin - volumeButtonWidth,
-            y: 0,
+            y: topMargin,
             width: volumeButtonWidth,
             height: 30
         )
         volumeButton.frame = volumeBgView.bounds
         
         pageWidth = width - margin * 2 - UIDevice.leftMargin - UIDevice.rightMargin + flowLayout.minimumLineSpacing
-        collectionView.frame = CGRect(x: 0, y: searchBgView.frame.maxY + 15, width: width, height: UIScreen.main.bounds.height / 3 - 100)
+        collectionView.frame = CGRect(x: 0, y: searchBgView.frame.maxY + 15, width: width, height: viewHeight - 20 - 100)
         flowLayout.sectionInset = UIEdgeInsets(
             top: 0,
             left: margin + UIDevice.leftMargin,

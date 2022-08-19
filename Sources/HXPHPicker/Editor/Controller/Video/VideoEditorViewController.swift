@@ -210,8 +210,10 @@ open class VideoEditorViewController: BaseViewController {
         videoView.editorDelegate = self
         return videoView
     }()
+
+    var musicViewHeight: CGFloat = UIScreen.main.bounds.height / 2
     lazy var musicView: VideoEditorMusicView = {
-        let view = VideoEditorMusicView.init(config: config.music)
+        let view = VideoEditorMusicView.init(config: config.music, viewHeight: musicViewHeight)
         view.delegate = self
         return view
     }()
@@ -777,7 +779,7 @@ extension VideoEditorViewController {
         }
     }
     func setMusicViewFrame() {
-        let marginHeight: CGFloat = UIScreen.main.bounds.height / 3
+        let marginHeight: CGFloat = musicViewHeight
         let musicY: CGFloat
         let musicHeight: CGFloat
         if !isMusicState {
