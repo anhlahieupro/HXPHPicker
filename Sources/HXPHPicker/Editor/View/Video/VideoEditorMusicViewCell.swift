@@ -183,6 +183,8 @@ class VideoEditorMusicViewCell: UICollectionViewCell {
         animationView.startAnimation()
         animationView.isHidden = false
         collectionView.reloadData()
+
+        /*
         let startPointX = -(width - 15)
         if music.isSelected {
             playTimer?.cancel()
@@ -231,6 +233,7 @@ class VideoEditorMusicViewCell: UICollectionViewCell {
                 }
             }
         }
+        */
     }
     
     func scrollLyric(time: TimeInterval) {
