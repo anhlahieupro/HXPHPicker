@@ -777,7 +777,7 @@ extension VideoEditorViewController {
         }
     }
     func setMusicViewFrame() {
-        let marginHeight: CGFloat = 190
+        let marginHeight: CGFloat = UIScreen.main.bounds.height / 3
         let musicY: CGFloat
         let musicHeight: CGFloat
         if !isMusicState {

@@ -72,7 +72,7 @@ class VideoEditorMusicView: UIView {
     }
     lazy var flowLayout: UICollectionViewFlowLayout = {
         let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.scrollDirection = .horizontal
+        flowLayout.scrollDirection = .vertical
         flowLayout.minimumLineSpacing = 15
         flowLayout.minimumInteritemSpacing = 0
         return flowLayout
@@ -245,10 +245,10 @@ class VideoEditorMusicView: UIView {
         showLyricButton.isSelected = false
         delegate?.musicView(self, didShowLyricButton: false, music: nil)
         stopMusic()
-        collectionView.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
+        // collectionView.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
     }
     func reloadContentOffset() {
-        collectionView.setContentOffset(collectionView.contentOffset, animated: false)
+        // collectionView.setContentOffset(collectionView.contentOffset, animated: false)
     }
     func reloadData(infos: [VideoEditorMusicInfo]) {
         setMusics(infos: infos)
@@ -331,14 +331,14 @@ class VideoEditorMusicView: UIView {
         volumeButton.frame = volumeBgView.bounds
         
         pageWidth = width - margin * 2 - UIDevice.leftMargin - UIDevice.rightMargin + flowLayout.minimumLineSpacing
-        collectionView.frame = CGRect(x: 0, y: searchBgView.frame.maxY + 15, width: width, height: 90)
+        collectionView.frame = CGRect(x: 0, y: searchBgView.frame.maxY + 15, width: width, height: UIScreen.main.bounds.height / 3 - 100)
         flowLayout.sectionInset = UIEdgeInsets(
             top: 0,
             left: margin + UIDevice.leftMargin,
             bottom: 0,
             right: margin + UIDevice.rightMargin
         )
-        flowLayout.itemSize = CGSize(width: pageWidth - flowLayout.minimumLineSpacing, height: collectionView.height)
+        flowLayout.itemSize = CGSize(width: pageWidth - flowLayout.minimumLineSpacing, height: 90)
         setBottomButtonFrame()
     }
     func setBottomButtonFrame() {
@@ -421,17 +421,19 @@ extension VideoEditorMusicView: UICollectionViewDataSource,
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: false)
+        /*
         let offsetX = pageWidth * CGFloat(indexPath.item)
         if (indexPath.item == selectedIndex && backgroundButton.isSelected) ||
             collectionView.contentOffset.x != offsetX {
             return
         }
+        */
         selectedIndex = indexPath.item
-        if collectionView.contentOffset.x == offsetX {
+        //if collectionView.contentOffset.x == offsetX {
             playMusic()
-        }else {
-            collectionView.setContentOffset(CGPoint(x: offsetX, y: collectionView.contentOffset.y), animated: true)
-        }
+        //}else {
+        //    collectionView.setContentOffset(CGPoint(x: offsetX, y: collectionView.contentOffset.y), animated: true)
+        //}
     }
     
     func scrollViewWillEndDragging(
@@ -439,6 +441,7 @@ extension VideoEditorMusicView: UICollectionViewDataSource,
         withVelocity velocity: CGPoint,
         targetContentOffset: UnsafeMutablePointer<CGPoint>
     ) {
+        /*
         if selectedIndex == -1 { selectedIndex = 0 }
         let finalPoint = targetContentOffset.pointee
         let pageWidth = pageWidth
@@ -459,28 +462,35 @@ extension VideoEditorMusicView: UICollectionViewDataSource,
         let offsetX = pageWidth * CGFloat(index)
         selectedIndex = index
         targetContentOffset.pointee.x = offsetX
+        */
     }
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        /*
         if !scrollView.isTracking && config.autoPlayWhenScrollingStops {
             playMusic()
         }
+        */
     }
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        /*
         if !decelerate {
             if selectedIndex == -1 { return }
             let offsetX = pageWidth * CGFloat(selectedIndex)
             scrollView.setContentOffset(CGPoint(x: offsetX, y: 0), animated: true)
         }
+        */
     }
  
     func playMusic() {
         if selectedIndex == -1 { return }
         if currentPlayIndex == selectedIndex { return }
         stopMusic()
+        /*
         let currentX = pageWidth * CGFloat(selectedIndex)
         if collectionView.contentOffset.x != currentX {
             collectionView.setContentOffset(CGPoint(x: currentX, y: 0), animated: false)
         }
+        */
         let cell = collectionView.cellForItem(
             at: IndexPath(
                 item: selectedIndex,
