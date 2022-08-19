@@ -19,7 +19,7 @@ protocol VideoEditorMusicViewDelegate: AnyObject {
                            completion: @escaping ([VideoEditorMusicInfo], Bool) -> Void)
 }
 
-class VideoEditorMusicView: UIView {
+public class VideoEditorMusicView: UIView {
     weak var delegate: VideoEditorMusicViewDelegate?
     lazy var bgMaskLayer: CAGradientLayer = {
         let layer = PhotoTools.getGradientShadowLayer(false)

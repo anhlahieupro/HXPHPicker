@@ -248,6 +248,10 @@ public protocol VideoEditorViewControllerDelegate: AnyObject {
     ///   - videoEditorViewController: 对应的 VideoEditorViewController
     ///   - text: 搜索的文字内容
     ///   - completion: 传入配乐信息，是否需要加载更多
+
+    func loadMoreMusicView(_ musicView: VideoEditorMusicView,
+                           completion: @escaping ([VideoEditorMusicInfo], Bool) -> Void)
+
     func videoEditorViewController(
         _ videoEditorViewController: VideoEditorViewController,
         didSearch text: String?,

@@ -69,6 +69,14 @@ extension VideoEditorViewController: VideoEditorMusicViewDelegate {
             self.musicView.alpha = 1
         }
     }
+
+    func loadMoreMusicView(_ musicView: VideoEditorMusicView,
+                           completion: @escaping ([VideoEditorMusicInfo], Bool) -> Void) {
+        
+        delegate?.loadMoreMusicView(musicView,
+                                    completion: completion)
+        
+    }
 }
 
 // MARK: VideoEditorSearchMusicViewDelegate
