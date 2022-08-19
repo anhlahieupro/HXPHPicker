@@ -504,6 +504,8 @@ public class VideoEditorMusicView: UIView {
         discoverBgView.isHidden = false
         favoritesBgView.isHidden = true
 
+        stopMusic()
+
         musics.removeAll()
         collectionView.reloadData()
         delegate?.discoverMusicView(
@@ -519,6 +521,8 @@ public class VideoEditorMusicView: UIView {
     @objc func didFavoritesButtonClick() {
         discoverBgView.isHidden = true
         favoritesBgView.isHidden = false
+
+        stopMusic()
 
         musics.removeAll()
         collectionView.reloadData()
@@ -672,7 +676,7 @@ extension VideoEditorMusicView: UICollectionViewDataSource,
             }
             beforeCell.stopMusic()
         }else {
-            if currentPlayIndex >= 0 {
+            if currentPlayIndex >= 0 && currentPlayIndex < musics.count {
                 let currentMusic = musics[currentPlayIndex]
                 PhotoManager.shared.suspendTask(currentMusic.audioURL)
                 currentMusic.isSelected = false

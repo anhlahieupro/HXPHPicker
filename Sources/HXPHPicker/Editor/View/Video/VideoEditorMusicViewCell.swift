@@ -184,16 +184,18 @@ class VideoEditorMusicViewCell: UICollectionViewCell {
         animationView.isHidden = false
         collectionView.reloadData()
 
-        /*
-        let startPointX = -(width - 15)
+        // let startPointX = -(width - 15)
         if music.isSelected {
             playTimer?.cancel()
             if music.lyricIsEmpty {
+                /*
                 DispatchQueue.main.async {
                     self.scrollLyric(time: 10)
                 }
+                */
                 return
             }
+            /*
             PhotoManager.shared.audioPlayFinish = { [weak self] in
                 guard let self = self else { return }
                 if self.music.lyricIsEmpty {
@@ -212,14 +214,16 @@ class VideoEditorMusicViewCell: UICollectionViewCell {
                 self.setPreciseContentOffset(x: timeOffsetX, y: 0)
                 self.scrollLyric(time: duration)
             }
+            */
         }else {
-            if PhotoManager.shared.playMusic(filePath: audioPath, finished: { [weak self] in
+            if PhotoManager.shared.playMusic(filePath: audioPath, finished: { /*[weak self] in
                 guard let self = self else { return }
                 if self.music.lyricIsEmpty {
                     return
                 }
-                self.setPreciseContentOffset(x: startPointX, y: 0)
+                self.setPreciseContentOffset(x: startPointX, y: 0)*/
             }) {
+                /*
                 if music.lyricIsEmpty {
                     scrollLyric(time: 10)
                     return
@@ -231,9 +235,9 @@ class VideoEditorMusicViewCell: UICollectionViewCell {
                 }else if let time = music.lyrics.last?.startTime {
                     scrollLyric(time: time + 5)
                 }
+                */
             }
         }
-        */
     }
     
     func scrollLyric(time: TimeInterval) {
