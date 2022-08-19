@@ -318,6 +318,7 @@ public class VideoEditorMusicView: UIView {
         bgMaskLayer.frame = bounds
         let topMargin: CGFloat = 20
         let margin: CGFloat = 30
+
         let searchTextWidth = searchButton.currentTitle?.width(
             ofFont: UIFont.mediumPingFang(ofSize: 14),
             maxHeight: 30
@@ -326,9 +327,7 @@ public class VideoEditorMusicView: UIView {
         if searchButtonWidth < 65 {
             searchButtonWidth = 65
         }
-        searchBgView.frame = CGRect(x: UIDevice.leftMargin + margin, y: topMargin, width: searchButtonWidth, height: 30)
-        searchButton.frame = searchBgView.bounds
-        
+
         let volumeTextWidth = volumeButton.currentTitle?.width(
             ofFont: UIFont.mediumPingFang(ofSize: 14),
             maxHeight: 30
@@ -337,6 +336,21 @@ public class VideoEditorMusicView: UIView {
         if volumeButtonWidth < 65 {
             volumeButtonWidth = 65
         }
+
+//        searchBgView.frame = CGRect(x: UIDevice.leftMargin + margin,
+//                                    y: topMargin,
+//                                    width: searchButtonWidth,
+//                                    height: 30)
+
+        searchBgView.frame = CGRect(
+            x: width - UIDevice.rightMargin - margin - volumeButtonWidth,
+            y: topMargin,
+            width: volumeButtonWidth,
+            height: 30
+        )
+        searchButton.frame = searchBgView.bounds
+        
+
         volumeBgView.frame = CGRect(
             x: width - UIDevice.rightMargin - margin - volumeButtonWidth,
             y: topMargin,
@@ -407,9 +421,17 @@ public class VideoEditorMusicView: UIView {
             showLyricButton.width = width - showLyricButton.x - 5
         }else if backgroundButton.x <= 0 || showLyricButton.frame.maxX >= width {
             let margin = (width - backgroundButton.width - originalSoundButton.width - showLyricButton.width) * 0.5
+
             backgroundButton.x = margin
-            originalSoundButton.x = backgroundButton.frame.maxX
+            backgroundButton.isHidden = true
+
+            originalSoundButton.x = margin
+            volumeBgView.y = originalSoundButton.y
+            volumeBgView.x = width - volumeBgView.width - margin
+            volumeButton.frame = volumeBgView.bounds
+
             showLyricButton.x = originalSoundButton.frame.maxX
+            showLyricButton.isHidden = true
         }
     }
     deinit {
