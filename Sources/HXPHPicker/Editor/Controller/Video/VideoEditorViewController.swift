@@ -32,7 +32,10 @@ open class VideoEditorViewController: BaseViewController {
     
     /// 当前配乐的音频路径
     public var backgroundMusicPath: String? {
-        didSet { toolView.reloadMusic(isSelected: backgroundMusicPath != nil) }
+        didSet {
+            toolView.reloadMusic(isSelected: backgroundMusicPath != nil)
+            volumeView.hasMusicSound = backgroundMusicPath != nil
+        }
     }
     
     /// 配乐音量

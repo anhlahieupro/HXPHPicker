@@ -96,6 +96,16 @@ class VideoEditorVolumeView: UIView {
         }
         delegate?.volumeView(didChanged: self)
     }
+    
+    var hasMusicSound: Bool = false {
+        didSet {
+            musicTitleLb.alpha = hasMusicSound ? 1 : 0.3
+            musicVolumeSlider.alpha = hasMusicSound ? 1 : 0.3
+            musicVolumeSlider.isUserInteractionEnabled = hasMusicSound
+            musicVolumeNumberLb.alpha = hasMusicSound ? 1 : 0.3
+        }
+    }
+    
     var hasOriginalSound: Bool = true {
         didSet {
             originalTitleLb.alpha = hasOriginalSound ? 1 : 0.3
