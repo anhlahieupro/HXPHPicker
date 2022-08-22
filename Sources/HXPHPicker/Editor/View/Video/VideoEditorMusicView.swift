@@ -26,6 +26,7 @@ protocol VideoEditorMusicViewDelegate: AnyObject {
 }
 
 public class VideoEditorMusicView: UIView {
+    weak var videoEditor: VideoEditorViewController?
     weak var delegate: VideoEditorMusicViewDelegate?
     lazy var bgMaskLayer: CAGradientLayer = {
         let layer = PhotoTools.getGradientShadowLayer(false)
@@ -714,6 +715,26 @@ extension VideoEditorMusicView {
                         self.updateData(musicInfos: musicInfos, hasMore: hasMore)
                     })
             }
+        }
+    }
+}
+
+extension VideoEditorMusicView {
+    public func searchMusicViewDidSelectItem() {
+        musics.filter({ $0.isSelected }).forEach { $0.isSelected = false }
+        musics.removeAll(where: { $0.isOtherMusic })
+        
+        if let otherMusic = videoEditor?.otherMusic {
+            
+            otherMusic.isOtherMusic = true
+            otherMusic.isSelected = true
+            
+            selectedIndex = 0
+            musics.insert(otherMusic, at: selectedIndex)
+        }
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.collectionView.reloadData()
         }
     }
 }

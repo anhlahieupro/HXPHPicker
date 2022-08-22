@@ -33,6 +33,8 @@ public struct VideoEditorMusicInfo {
 }
 
 class VideoEditorMusic: Equatable, Codable {
+    public var isOtherMusic = false
+    
     let audioURL: URL
     let lrc: String
     init(audioURL: URL,

@@ -214,6 +214,7 @@ open class VideoEditorViewController: BaseViewController {
     var musicViewHeight: CGFloat = UIScreen.main.bounds.height / 2
     lazy var musicView: VideoEditorMusicView = {
         let view = VideoEditorMusicView.init(config: config.music, viewHeight: musicViewHeight)
+        view.videoEditor = self
         view.delegate = self
         return view
     }()

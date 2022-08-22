@@ -43,7 +43,7 @@ class VideoEditorSearchMusicView: UIView {
         let view = UIView()
         view.addSubview(cancelButton)
         view.addSubview(titleLb)
-        view.addSubview(finishButton)
+        // view.addSubview(finishButton)
         return view
     }()
     lazy var titleLb: UILabel = {
@@ -365,6 +365,10 @@ extension VideoEditorSearchMusicView: UICollectionViewDataSource,
         }
         currentSelectItem = indexPath.item
         finishButton.isEnabled = true
+            
+            delegate?.searchMusicView(didFinishClick: self)
+            currentSelectItem = -1
+            
     }
     func collectionView(
         _ collectionView: UICollectionView,

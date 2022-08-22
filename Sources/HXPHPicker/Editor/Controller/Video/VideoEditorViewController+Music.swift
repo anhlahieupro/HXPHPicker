@@ -13,6 +13,10 @@ extension VideoEditorViewController: VideoEditorMusicViewDelegate {
         videoView.imageResizerView.imageView.stickerView.removeAudioView()
     }
     func musicView(_ musicView: VideoEditorMusicView, didShowLyricButton isSelected: Bool, music: VideoEditorMusic?) {
+        
+        PhotoManager.shared.changeAudioPlayerVolume(backgroundMusicVolume)
+        
+        /*
         removeAudioSticker()
         if !isSelected {
             return
@@ -27,6 +31,7 @@ extension VideoEditorViewController: VideoEditorMusicViewDelegate {
             return
         }
         videoView.addSticker(item: item, isSelected: false)
+        */
     }
     func musicView(_ musicView: VideoEditorMusicView, didSelectMusic audioPath: String?) {
         backgroundMusicPath = audioPath
@@ -107,12 +112,15 @@ extension VideoEditorViewController: VideoEditorSearchMusicViewDelegate {
         _ searchMusicView: VideoEditorSearchMusicView,
         didSelectItem audioPath: String?, music: VideoEditorMusic
     ) {
-        musicView.reset()
-        musicView.backgroundButton.isSelected = true
-        musicView(musicView, didShowLyricButton: true, music: music)
-        musicView.showLyricButton.isSelected = true
         backgroundMusicPath = audioPath
         otherMusic = music
+        
+        // musicView.reset()
+        // musicView.backgroundButton.isSelected = true
+        musicView(musicView, didShowLyricButton: true, music: music)
+        // musicView.showLyricButton.isSelected = true
+        
+        musicView.searchMusicViewDidSelectItem()
     }
     func searchMusicView(
         _ searchMusicView: VideoEditorSearchMusicView,
