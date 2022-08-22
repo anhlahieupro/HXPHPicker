@@ -167,11 +167,11 @@ class VideoEditorSearchMusicView: UIView {
     lazy var noMoreLine: CAShapeLayer = {
         let noMoreLine = CAShapeLayer()
         noMoreLine.contentsScale = UIScreen.main.scale
-        noMoreLine.fillColor = UIColor.white.withAlphaComponent(0.5).cgColor
-        noMoreLine.strokeColor = UIColor.white.withAlphaComponent(0.5).cgColor
+        noMoreLine.fillColor = UIColor.clear.cgColor
+        noMoreLine.strokeColor = UIColor.clear.cgColor
         noMoreLine.lineCap = .round
         noMoreLine.lineJoin = .round
-        noMoreLine.lineWidth = 1
+        noMoreLine.lineWidth = 0
         return noMoreLine
     }()
     var currentSelectItem: Int = -1
