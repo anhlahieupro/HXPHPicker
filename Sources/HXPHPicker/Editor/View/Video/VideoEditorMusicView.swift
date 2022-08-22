@@ -31,7 +31,11 @@ public class VideoEditorMusicView: UIView {
         let layer = PhotoTools.getGradientShadowLayer(false)
         return layer
     }()
-    lazy var searchBgView: UIVisualEffectView = {
+    lazy var searchBgView: UIView = {
+        let view = UIView()
+        view.addSubview(searchButton)
+        return view
+        /*
         let visualEffect = UIBlurEffect.init(style: .light)
         let view = UIVisualEffectView.init(effect: visualEffect)
         view.layer.cornerRadius = 15
@@ -39,6 +43,7 @@ public class VideoEditorMusicView: UIView {
         view.contentView.addSubview(searchButton)
         view.backgroundColor = UIColor.black.withAlphaComponent(0.2)
         return view
+        */
     }()
     lazy var searchButton: UIButton = {
         let button = UIButton(type: .system)
@@ -55,7 +60,11 @@ public class VideoEditorMusicView: UIView {
     @objc func didSearchButtonClick() {
         delegate?.musicView(didSearchButton: self)
     }
-    lazy var volumeBgView: UIVisualEffectView = {
+    lazy var volumeBgView: UIView = {
+        let view = UIView()
+        view.addSubview(volumeButton)
+        return view
+        /*
         let visualEffect = UIBlurEffect.init(style: .light)
         let view = UIVisualEffectView.init(effect: visualEffect)
         view.layer.cornerRadius = 15
@@ -63,6 +72,7 @@ public class VideoEditorMusicView: UIView {
         view.contentView.addSubview(volumeButton)
         view.backgroundColor = UIColor.black.withAlphaComponent(0.2)
         return view
+        */
     }()
     lazy var volumeButton: UIButton = {
         let button = UIButton(type: .system)
@@ -448,7 +458,7 @@ public class VideoEditorMusicView: UIView {
             backgroundButton.isHidden = true
 
             originalSoundButton.x = margin
-            volumeBgView.y = originalSoundButton.y
+            volumeBgView.centerY = originalSoundButton.centerY
             volumeBgView.x = width - volumeBgView.width - margin
             volumeButton.frame = volumeBgView.bounds
 
