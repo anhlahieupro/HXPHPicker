@@ -590,12 +590,23 @@ extension VideoEditorMusicView: UICollectionViewDataSource,
             return
         }
         */
+        
+        
+        if selectedIndex == indexPath.item {
+            
+            reset()
+            
+        } else {
+        
         selectedIndex = indexPath.item
         //if collectionView.contentOffset.x == offsetX {
             playMusic()
         //}else {
         //    collectionView.setContentOffset(CGPoint(x: offsetX, y: collectionView.contentOffset.y), animated: true)
         //}
+            
+        }
+        
     }
     
     public func scrollViewWillEndDragging(
@@ -730,6 +741,7 @@ extension VideoEditorMusicView {
             otherMusic.isSelected = true
             
             selectedIndex = 0
+            currentPlayIndex = 0
             musics.insert(otherMusic, at: selectedIndex)
         }
         
