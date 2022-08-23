@@ -196,7 +196,7 @@ open class VideoEditorViewController: BaseViewController {
     var videoSize: CGSize = .zero
     
     /// 不是在音乐列表选中的音乐数据（不包括搜索）
-    var otherMusic: VideoEditorMusic?
+    public var otherMusic: VideoEditorMusic?
     lazy var videoView: PhotoEditorView = {
         let videoView = PhotoEditorView(
             editType: .video,
@@ -356,6 +356,50 @@ open class VideoEditorViewController: BaseViewController {
     open override func viewDidLoad() {
         super.viewDidLoad()
         initView()
+        
+        if let music = otherMusic {
+            let key = music.audioURL.absoluteString
+            
+            let audioTmpURL = PhotoTools.getAudioTmpURL(for: key)
+            
+            if PhotoTools.isCached(forAudio: key) {
+                
+                PhotoManager.shared.playMusic(filePath: audioTmpURL.path) { }
+                
+                music.isOtherMusic = true
+                music.isSelected = true
+                
+                music.localAudioPath = audioTmpURL.path
+                
+                self.backgroundMusicPath = audioTmpURL.path
+                self.musicView.searchMusicViewDidSelectItem()
+                
+                return
+            }
+            
+            PhotoManager.shared.downloadTask(
+                with: music.audioURL,
+                toFile: audioTmpURL,
+                ext: music
+            ) { [weak self] audioURL, error, ext in
+                
+                guard let self = self else { return }
+                
+                if let audioURL = audioURL, let music = ext as? VideoEditorMusic {
+                    
+                    PhotoManager.shared.playMusic(filePath: audioURL.path) { }
+                    
+                    music.isOtherMusic = true
+                    music.isSelected = true
+                    
+                    music.localAudioPath = audioTmpURL.path
+                    
+                    self.backgroundMusicPath = audioTmpURL.path
+                    self.musicView.searchMusicViewDidSelectItem()
+                }
+            }
+        }
+        
     }
     func initOptions() {
         for options in config.toolView.toolOptions {
