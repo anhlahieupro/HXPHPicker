@@ -447,25 +447,24 @@ public class VideoEditorMusicView: UIView {
             width: showLyricWidth,
             height: buttonHeight
         )
-        if backgroundButton.x <= 0 && showLyricButton.frame.maxX >= width {
-            backgroundButton.x = 5
-            backgroundButton.width = originalSoundButton.x - 10
-            showLyricButton.x = originalSoundButton.frame.maxX + 5
-            showLyricButton.width = width - showLyricButton.x - 5
-        }else if backgroundButton.x <= 0 || showLyricButton.frame.maxX >= width {
-            let margin = (width - backgroundButton.width - originalSoundButton.width - showLyricButton.width) * 0.5
+//        if backgroundButton.x <= 0 && showLyricButton.frame.maxX >= width {
+//            backgroundButton.x = 5
+//            backgroundButton.width = originalSoundButton.x - 10
+//            showLyricButton.x = originalSoundButton.frame.maxX + 5
+//            showLyricButton.width = width - showLyricButton.x - 5
+//        }else if backgroundButton.x <= 0 || showLyricButton.frame.maxX >= width {
 
-            backgroundButton.x = margin
+            backgroundButton.x = UIDevice.leftMargin + margin
             backgroundButton.isHidden = true
 
-            originalSoundButton.x = margin
+            originalSoundButton.x = UIDevice.leftMargin + margin
             volumeBgView.centerY = originalSoundButton.centerY
-            volumeBgView.x = width - volumeBgView.width - margin
+            volumeBgView.x = width - volumeBgView.width - originalSoundButton.x
             volumeButton.frame = volumeBgView.bounds
 
             showLyricButton.x = originalSoundButton.frame.maxX
             showLyricButton.isHidden = true
-        }
+//        }
     }
     deinit {
         NotificationCenter.default.removeObserver(self)
