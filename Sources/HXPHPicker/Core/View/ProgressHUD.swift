@@ -8,7 +8,7 @@
 import UIKit
 
 extension ProgressHUD {
-    enum Mode {
+    public enum Mode {
         case indicator
         case image
         case circleProgress
@@ -16,7 +16,7 @@ extension ProgressHUD {
     }
 }
 
-final class ProgressHUD: UIView {
+final public class ProgressHUD: UIView {
     var mode: Mode {
         didSet {
             if mode == oldValue {
@@ -101,7 +101,7 @@ final class ProgressHUD: UIView {
         )
         return imageView
     }()
-    var progress: CGFloat = 0 {
+    public var progress: CGFloat = 0 {
         didSet {
             circleView.progress = progress
         }
@@ -298,7 +298,7 @@ final class ProgressHUD: UIView {
         blurEffectView.frame = backgroundView.bounds
     }
     @discardableResult
-    class func showLoading(
+    public class func showLoading(
         addedTo view: UIView?,
         animated: Bool
     ) -> ProgressHUD? {
@@ -398,7 +398,7 @@ final class ProgressHUD: UIView {
         )
         view.addSubview(progressView)
     }
-    class func showProgress(
+    public class func showProgress(
         addedTo view: UIView?,
         progress: CGFloat = 0,
         text: String? = nil,
@@ -454,7 +454,7 @@ final class ProgressHUD: UIView {
         view.addSubview(progressView)
     }
     
-    class func hide(
+    public class func hide(
         forView view: UIView?,
         animated: Bool
     ) {
@@ -479,7 +479,7 @@ final class ProgressHUD: UIView {
             )
         }
     }
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         if !frame.equalTo(superview?.bounds ?? frame) {
             frame = superview?.bounds ?? frame
