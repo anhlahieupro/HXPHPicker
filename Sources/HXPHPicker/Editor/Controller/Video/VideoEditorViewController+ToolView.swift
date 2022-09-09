@@ -53,7 +53,7 @@ extension VideoEditorViewController: EditorToolViewDelegate {
         if hasAudio || timeRang != .zero || hasCropSize {
             exportLoadingView = ProgressHUD.showProgress(
                 addedTo: view,
-                text: "正在处理...".localized,
+                // text: "正在处理...".localized,
                 animated: true
             )
             exportVideoURL(
