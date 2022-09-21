@@ -24,23 +24,30 @@ public struct VideoEditorMusicInfo {
     /// 如果不包含的话那么显示歌词功能将会出错
     public let lrc: String
     
+    public var other: [String: String]
+    
     public init(
         audioURL: URL,
-        lrc: String) {
+        lrc: String,
+        other: [String: String]) {
         self.audioURL = audioURL
         self.lrc = lrc
+        self.other = other
     }
 }
 
 public class VideoEditorMusic: Equatable, Codable {
     public var isOtherMusic = false
+    public var other: [String: String] = [:]
     
     let audioURL: URL
     let lrc: String
     public init(audioURL: URL,
-         lrc: String) {
+         lrc: String,
+        other: [String: String]) {
         self.audioURL = audioURL
         self.lrc = lrc
+        self.other = other
     }
     
     var isLoading: Bool = false

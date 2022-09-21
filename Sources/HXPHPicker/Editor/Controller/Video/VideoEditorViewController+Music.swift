@@ -98,6 +98,10 @@ extension VideoEditorViewController: VideoEditorMusicViewDelegate {
                                      completion: completion)
         
     }
+    
+    func musicView(selectMusic music: VideoEditorMusic?) {
+        delegate?.musicView(selectMusic: music)
+    }
 }
 
 // MARK: VideoEditorSearchMusicViewDelegate
@@ -156,6 +160,9 @@ extension VideoEditorViewController: VideoEditorSearchMusicViewDelegate {
             }
             self.searchMusicView.clearData()
         }
+    }
+    func searchMusicView(selectMusic music: VideoEditorMusic?) {
+        delegate?.musicView(selectMusic: music)
     }
 }
 

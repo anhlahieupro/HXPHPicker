@@ -87,7 +87,8 @@ extension PhotoTools {
            let lrc = "天外来物".lrc {
             let info = VideoEditorMusicInfo(
                 audioURL: audioURL,
-                lrc: lrc
+                lrc: lrc,
+                other: [:]
             )
             infos.append(info)
         }

@@ -66,5 +66,9 @@ extension CameraViewController: VideoEditorViewControllerDelegate {
                                    completion: @escaping ([VideoEditorMusicInfo], Bool) -> Void) {
 
     }
+    
+    public func musicView(selectMusic music: VideoEditorMusic?) {
+        
+    }
 }
 #endif

@@ -20,6 +20,8 @@ protocol VideoEditorSearchMusicViewDelegate: AnyObject {
                          loadMore text: String?,
                          completion: @escaping ([VideoEditorMusicInfo], Bool) -> Void)
     func searchMusicView(deselectItem searchMusicView: VideoEditorSearchMusicView)
+    
+    func searchMusicView(selectMusic music: VideoEditorMusic?)
 }
 
 class VideoEditorSearchMusicView: UIView {
@@ -234,7 +236,8 @@ class VideoEditorSearchMusicView: UIView {
         var musicArray: [VideoEditorMusic] = []
         for musicInfo in infos {
             let music = VideoEditorMusic(audioURL: musicInfo.audioURL,
-                                         lrc: musicInfo.lrc)
+                                         lrc: musicInfo.lrc,
+                                         other: musicInfo.other)
             musicArray.append(music)
         }
         return musicArray
@@ -368,6 +371,8 @@ extension VideoEditorSearchMusicView: UICollectionViewDataSource,
             
             delegate?.searchMusicView(didFinishClick: self)
             currentSelectItem = -1
+            
+            delegate?.searchMusicView(selectMusic: musics[indexPath.item])
             
     }
     func collectionView(

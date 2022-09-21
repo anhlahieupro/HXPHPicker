@@ -23,6 +23,8 @@ protocol VideoEditorMusicViewDelegate: AnyObject {
 
     func favoritesMusicView(_ musicView: VideoEditorMusicView,
                             completion: @escaping ([VideoEditorMusicInfo], Bool) -> Void)
+    
+    func musicView(selectMusic music: VideoEditorMusic?)
 }
 
 public class VideoEditorMusicView: UIView {
@@ -270,7 +272,8 @@ public class VideoEditorMusicView: UIView {
         for musicInfo in infos {
             let music = VideoEditorMusic(
                 audioURL: musicInfo.audioURL,
-                lrc: musicInfo.lrc
+                lrc: musicInfo.lrc,
+                other: musicInfo.other
             )
             musicArray.append(music)
         }
@@ -317,7 +320,8 @@ public class VideoEditorMusicView: UIView {
         }
         let loadMusic = VideoEditorMusic(
             audioURL: URL(fileURLWithPath: ""),
-            lrc: ""
+            lrc: "",
+            other: [:]
         )
         loadMusic.isLoading = true
         musics = [loadMusic]
@@ -550,7 +554,8 @@ public class VideoEditorMusicView: UIView {
         for musicInfo in musicInfos {
             let music = VideoEditorMusic(
                 audioURL: musicInfo.audioURL,
-                lrc: musicInfo.lrc
+                lrc: musicInfo.lrc,
+                other: musicInfo.other
             )
 
             self.musics.append(music)
@@ -594,12 +599,14 @@ extension VideoEditorMusicView: UICollectionViewDataSource,
         if selectedIndex == indexPath.item {
             
             reset()
+            delegate?.musicView(selectMusic: nil)
             
         } else {
         
         selectedIndex = indexPath.item
         //if collectionView.contentOffset.x == offsetX {
             playMusic()
+            delegate?.musicView(selectMusic: musics[indexPath.item])
         //}else {
         //    collectionView.setContentOffset(CGPoint(x: offsetX, y: collectionView.contentOffset.y), animated: true)
         //}

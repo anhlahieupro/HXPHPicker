@@ -252,6 +252,8 @@ public protocol VideoEditorViewControllerDelegate: AnyObject {
     func favoritesMusicView(_ musicView: VideoEditorMusicView,
                             completion: @escaping ([VideoEditorMusicInfo], Bool) -> Void)
     
+    func musicView(selectMusic music: VideoEditorMusic?)
+    
     /// 搜索配乐信息
     /// - Parameters:
     ///   - videoEditorViewController: 对应的 VideoEditorViewController
