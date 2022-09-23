@@ -122,8 +122,13 @@ public extension PhotoTools {
     
     @discardableResult
     static func getAudioTmpURL(for key: String) -> URL {
+        var ext = ".mp3"
+        if let keyExt = key.components(separatedBy: ".").last, !keyExt.isEmpty {
+            ext = "." + keyExt
+        }
+        
         var cachePath = getAudioTmpFolderPath()
-        cachePath.append(contentsOf: "/" + key.md5 + ".mp3")
+        cachePath.append(contentsOf: "/" + key.md5 + ext)
         return URL.init(fileURLWithPath: cachePath)
     }
     
