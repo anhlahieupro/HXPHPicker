@@ -108,20 +108,20 @@ extension PhotoEditorCropToolView: UICollectionViewDataSource {
         cell.model = ratioModels[indexPath.item]
         return cell
     }
-    public func collectionView(
-        _ collectionView: UICollectionView,
-        viewForSupplementaryElementOfKind kind: String,
-        at indexPath: IndexPath
-    ) -> UICollectionReusableView {
-        let headerView = collectionView.dequeueReusableSupplementaryView(
-            ofKind: UICollectionView.elementKindSectionHeader,
-            withReuseIdentifier: "PhotoEditorCropToolHeaderViewID",
-            for: indexPath
-        ) as! PhotoEditorCropToolHeaderView
-        headerView.delegate = self
-        headerView.showRatios = showRatios
-        return headerView
-    }
+//    public func collectionView(
+//        _ collectionView: UICollectionView,
+//        viewForSupplementaryElementOfKind kind: String,
+//        at indexPath: IndexPath
+//    ) -> UICollectionReusableView {
+//        let headerView = collectionView.dequeueReusableSupplementaryView(
+//            ofKind: UICollectionView.elementKindSectionHeader,
+//            withReuseIdentifier: "PhotoEditorCropToolHeaderViewID",
+//            for: indexPath
+//        ) as! PhotoEditorCropToolHeaderView
+//        headerView.delegate = self
+//        headerView.showRatios = showRatios
+//        return headerView
+//    }
 }
 extension PhotoEditorCropToolView: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     public func collectionView(
@@ -170,7 +170,8 @@ extension PhotoEditorCropToolView: UICollectionViewDelegate, UICollectionViewDel
         layout collectionViewLayout: UICollectionViewLayout,
         referenceSizeForHeaderInSection section: Int
     ) -> CGSize {
-        CGSize(width: 100, height: 50)
+        // CGSize(width: 100, height: 50)
+        return .zero
     }
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         var selectedIndexPath: IndexPath?
