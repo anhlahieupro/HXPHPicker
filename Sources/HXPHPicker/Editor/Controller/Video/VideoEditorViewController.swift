@@ -234,6 +234,42 @@ open class VideoEditorViewController: BaseViewController {
     var isMusicState = false
     var isSearchMusic = false
     var isShowVolume = false
+    lazy var brushBlockView: PhotoEditorBrushSizeView = {
+        let view = PhotoEditorBrushSizeView.init(frame: .init(x: 0, y: 0, width: 30, height: 200))
+        view.alpha = 0
+        view.isHidden = true
+        view.value = config.brush.lineWidth / (config.brush.maximumLinewidth - config.brush.minimumLinewidth)
+        view.blockBeganChanged = { [weak self] _ in
+            guard let self = self else { return }
+            let lineWidth = self.videoView.brushLineWidth + 4
+            self.brushSizeView.size = CGSize(width: lineWidth, height: lineWidth)
+            self.brushSizeView.center = CGPoint(x: self.view.width * 0.5, y: self.view.height * 0.5)
+            self.brushSizeView.alpha = 0
+            self.view.addSubview(self.brushSizeView)
+            UIView.animate(withDuration: 0.2) {
+                self.brushSizeView.alpha = 1
+            }
+        }
+        view.blockDidChanged = { [weak self] in
+            guard let self = self else { return }
+            let config = self.config.brush
+            let lineWidth = (
+                config.maximumLinewidth -  config.minimumLinewidth
+            ) * $0 + config.minimumLinewidth
+            self.videoView.brushLineWidth = lineWidth
+            self.brushSizeView.size = CGSize(width: lineWidth + 4, height: lineWidth + 4)
+            self.brushSizeView.center = CGPoint(x: self.view.width * 0.5, y: self.view.height * 0.5)
+        }
+        view.blockEndedChanged = { [weak self] _ in
+            guard let self = self else { return }
+            UIView.animate(withDuration: 0.2) {
+                self.brushSizeView.alpha = 0
+            } completion: { _ in
+                self.brushSizeView.removeFromSuperview()
+            }
+        }
+        return view
+    }()
     lazy var brushColorView: PhotoEditorBrushColorView = {
         let view = PhotoEditorBrushColorView(config: config.brush)
         view.delegate = self
@@ -300,7 +336,7 @@ open class VideoEditorViewController: BaseViewController {
         cropConfirmView.delegate = self
         return cropConfirmView
     }()
-    lazy var topView: UIView = {
+    public lazy var topView: UIView = {
         let view = UIView.init(frame: CGRect(x: 0, y: 0, width: 0, height: 44))
         let cancelBtn = UIButton.init(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
 
@@ -438,6 +474,7 @@ open class VideoEditorViewController: BaseViewController {
         view.addSubview(toolView)
         if toolOptions.contains(.graffiti) {
             view.addSubview(brushColorView)
+            view.addSubview(brushBlockView)
         }
         if toolOptions.contains(.music) {
             view.addSubview(musicView)
@@ -553,13 +590,21 @@ open class VideoEditorViewController: BaseViewController {
         toolView.reloadContentInset()
         topView.width = view.width
         topView.height = navigationController?.navigationBar.height ?? 44
+        let viewControllersCount = navigationController?.viewControllers.count ?? 0
         if let modalPresentationStyle = navigationController?.modalPresentationStyle, UIDevice.isPortrait {
-            if modalPresentationStyle == .fullScreen || modalPresentationStyle == .custom {
+            if modalPresentationStyle == .fullScreen ||
+                modalPresentationStyle == .custom ||
+                viewControllersCount > 1 {
                 topView.y = UIDevice.generalStatusBarHeight
             }
-        }else if (modalPresentationStyle == .fullScreen || modalPresentationStyle == .custom) && UIDevice.isPortrait {
+        }else if (
+            modalPresentationStyle == .fullScreen ||
+            modalPresentationStyle == .custom ||
+            viewControllersCount > 1
+        ) && UIDevice.isPortrait {
             topView.y = UIDevice.generalStatusBarHeight
         }
+        
         topMaskLayer.frame = CGRect(x: 0, y: 0, width: view.width, height: topView.frame.maxY + 10)
         cropView.frame = CGRect(x: 0, y: toolView.y - (UIDevice.isPortrait ? 100 : 90), width: view.width, height: 100)
         cropConfirmView.frame = toolView.frame
@@ -590,7 +635,9 @@ open class VideoEditorViewController: BaseViewController {
             cropToolView.updateContentInset()
         }
         if toolOptions.contains(.graffiti) {
-            brushColorView.frame = CGRect(x: 0, y: toolView.y - 85, width: view.width, height: 85)
+            brushColorView.frame = CGRect(x: 0, y: toolView.y - 65, width: view.width, height: 65)
+            brushBlockView.x = view.width - 45 - UIDevice.rightMargin
+            brushBlockView.centerY = view.height * 0.5
         }
         if toolOptions.isSticker {
             setChartletViewFrame()
@@ -626,6 +673,9 @@ open class VideoEditorViewController: BaseViewController {
     open override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         isPresentText = false
+        if let isHidden = navigationController?.navigationBar.isHidden, !isHidden {
+            navigationController?.setNavigationBarHidden(true, animated: false)
+        }
     }
     open override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
@@ -633,6 +683,9 @@ open class VideoEditorViewController: BaseViewController {
             return
         }
         stopAllOperations()
+        if let exportSession = exportSession {
+            exportSession.cancelExport()
+        }
     }
     public func stopAllOperations() {
         stopPlayTimer()
@@ -658,7 +711,6 @@ open class VideoEditorViewController: BaseViewController {
         if let asset = avAsset {
             asset.cancelLoading()
         }
-        exportSession?.cancelExport()
     }
 }
 
