@@ -618,9 +618,9 @@ open class VideoEditorViewController: BaseViewController {
             videoViewY = UIDevice.generalStatusBarHeight
         }
 
-        videoView.frame = CGRect(x: 0, y: videoViewY,
+        videoView.frame = CGRect(x: 0, y: 0,
                                  width: UIScreen.main.bounds.width,
-                                 height: UIScreen.main.bounds.height * 0.83)
+                                 height: UIScreen.main.bounds.height)
 
         if !videoView.frame.equalTo(view.bounds) && !videoView.frame.isEmpty && !videoViewDidChange {
             videoView.reset(false)
