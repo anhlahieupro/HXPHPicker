@@ -250,7 +250,7 @@ public class VideoEditorMusicView: UIView {
         if backgroundButton.isSelected && currentPlayIndex != -2 {
             beforeIsSelect = true
         }
-        stopMusic()
+        // stopMusic()
         didEnterPlayGround = true
     }
     @objc func appDidEnterPlayGround() {
