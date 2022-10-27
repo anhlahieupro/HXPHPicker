@@ -29,7 +29,7 @@ public struct VideoEditorMusicInfo {
     public init(
         audioURL: URL,
         lrc: String,
-        other: [String: String]) {
+        other: [String: String] = [:]) {
         self.audioURL = audioURL
         self.lrc = lrc
         self.other = other

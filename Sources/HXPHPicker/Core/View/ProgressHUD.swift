@@ -300,7 +300,7 @@ final public class ProgressHUD: UIView {
     @discardableResult
     public class func showLoading(
         addedTo view: UIView?,
-        animated: Bool
+        animated: Bool = true
     ) -> ProgressHUD? {
         showLoading(
             addedTo: view,
@@ -456,7 +456,7 @@ final public class ProgressHUD: UIView {
     
     public class func hide(
         forView view: UIView?,
-        animated: Bool
+        animated: Bool = true
     ) {
         hide(
             forView: view,
