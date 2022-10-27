@@ -518,7 +518,7 @@ public class VideoEditorMusicView: UIView {
         discoverBgView.isHidden = false
         favoritesBgView.isHidden = true
 
-        stopMusic()
+        updateOtherMusic()
 
         musics.removeAll()
         collectionView.reloadData()
@@ -528,7 +528,9 @@ public class VideoEditorMusicView: UIView {
                 guard let self = self else { return }
 
                 self.musics.removeAll()
-                self.updateData(musicInfos: musicInfos, hasMore: hasMore)
+                self.updateData(otherMusic: self.videoEditor?.otherMusic,
+                                musicInfos: musicInfos,
+                                hasMore: hasMore)
             })
     }
 
@@ -536,7 +538,7 @@ public class VideoEditorMusicView: UIView {
         discoverBgView.isHidden = true
         favoritesBgView.isHidden = false
 
-        stopMusic()
+        updateOtherMusic()
 
         musics.removeAll()
         collectionView.reloadData()
@@ -546,12 +548,39 @@ public class VideoEditorMusicView: UIView {
                 guard let self = self else { return }
 
                 self.musics.removeAll()
-                self.updateData(musicInfos: musicInfos, hasMore: hasMore)
+                self.updateData(otherMusic: self.videoEditor?.otherMusic,
+                                musicInfos: musicInfos,
+                                hasMore: hasMore)
             })
     }
+    
+    func updateOtherMusic() {
+        if selectedIndex >= 0
+            && selectedIndex < musics.count {
+            
+            videoEditor?.otherMusic = musics[selectedIndex]
+            videoEditor?.otherMusic?.isOtherMusic = true
+            videoEditor?.otherMusic?.isSelected = true
+        }
+    }
 
-    private func updateData(musicInfos: [VideoEditorMusicInfo], hasMore: Bool) {
-        for musicInfo in musicInfos {
+    private func updateData(otherMusic: VideoEditorMusic?,
+                            musicInfos: [VideoEditorMusicInfo],
+                            hasMore: Bool) {
+        
+        if let otherMusic = otherMusic {
+            otherMusic.isOtherMusic = true
+            otherMusic.isSelected = true
+            
+            selectedIndex = 0
+            currentPlayIndex = 0
+            
+            self.musics.append(otherMusic)
+        }
+        
+        for musicInfo in musicInfos
+        where musicInfo.audioURL.absoluteString != otherMusic?.audioURL.absoluteString {
+            
             let music = VideoEditorMusic(
                 audioURL: musicInfo.audioURL,
                 lrc: musicInfo.lrc,
@@ -708,6 +737,7 @@ extension VideoEditorMusicView: UICollectionViewDataSource,
                 let currentMusic = musics[currentPlayIndex]
                 PhotoManager.shared.suspendTask(currentMusic.audioURL)
                 currentMusic.isSelected = false
+                videoEditor?.otherMusic?.isSelected = false
             }
             PhotoManager.shared.stopPlayMusic()
         }
@@ -729,7 +759,9 @@ extension VideoEditorMusicView {
                     self,
                     completion: { [weak self] musicInfos, hasMore in
                         guard let self = self else { return }
-                        self.updateData(musicInfos: musicInfos, hasMore: hasMore)
+                        self.updateData(otherMusic: nil,
+                                        musicInfos: musicInfos,
+                                        hasMore: hasMore)
                     })
             }
         }
@@ -739,7 +771,8 @@ extension VideoEditorMusicView {
 extension VideoEditorMusicView {
     public func searchMusicViewDidSelectItem() {
         musics.filter({ $0.isSelected }).forEach { $0.isSelected = false }
-        musics.removeAll(where: { $0.isOtherMusic })
+        musics.removeAll(where: { $0.isOtherMusic
+            || $0.audioURL.absoluteString == videoEditor?.otherMusic?.audioURL.absoluteString })
         
         if let otherMusic = videoEditor?.otherMusic {
             

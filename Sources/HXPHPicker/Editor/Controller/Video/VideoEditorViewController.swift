@@ -784,6 +784,10 @@ extension VideoEditorViewController {
             videoView.stickerEnabled = true
             isMusicState = false
             updateMusicView()
+            
+            // hide music view
+            // update otherMusic
+            musicView.updateOtherMusic()
         }
         if topView.isHidden == true {
             showTopView()
