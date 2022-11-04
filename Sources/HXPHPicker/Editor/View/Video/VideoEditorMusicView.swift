@@ -223,9 +223,17 @@ public class VideoEditorMusicView: UIView {
         if config.showSearch {
             addSubview(searchBgView)
         }
+        
         addSubview(volumeBgView)
         addSubview(backgroundButton)
-        addSubview(originalSoundButton)
+        
+        if config.showOriginalSound {
+            addSubview(originalSoundButton)
+        } else {
+            originalSoundButton.isSelected = false
+            delegate?.musicView(self, didOriginalSoundButtonClick: originalSoundButton.isSelected)
+        }
+        
         addSubview(showLyricButton)
         NotificationCenter.default.addObserver(
             self,

@@ -227,7 +227,7 @@ open class VideoEditorViewController: BaseViewController {
         return view
     }()
     lazy var volumeView: VideoEditorVolumeView = {
-        let view = VideoEditorVolumeView(config.music.tintColor)
+        let view = VideoEditorVolumeView(config.music)
         view.delegate = self
         return view
     }()
@@ -981,7 +981,7 @@ extension VideoEditorViewController {
         }
     }
     func setVolumeViewFrame() {
-        let marginHeight: CGFloat = 120
+        let marginHeight: CGFloat = config.music.showOriginalSound ? 120 : 80
         let volumeY: CGFloat
         let volumeHeight: CGFloat
         if !isShowVolume {

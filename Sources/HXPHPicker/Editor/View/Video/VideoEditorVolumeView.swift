@@ -131,18 +131,25 @@ class VideoEditorVolumeView: UIView {
         }
     }
     
-    init(_ color: UIColor) {
+    init(_ config: VideoEditorConfiguration.Music) {
         super.init(frame: .zero)
         layer.addSublayer(bgMaskLayer)
         addSubview(bgView)
         addSubview(musicTitleLb)
         addSubview(musicVolumeSlider)
+        
+        let color = config.tintColor
+        
         musicVolumeSlider.minimumTrackTintColor = color
         addSubview(musicVolumeNumberLb)
-        addSubview(originalTitleLb)
-        addSubview(originalVolumeSlider)
-        originalVolumeSlider.minimumTrackTintColor = color
-        addSubview(originalVolumeNumberLb)
+        
+        if config.showOriginalSound {
+            addSubview(originalTitleLb)
+            addSubview(originalVolumeSlider)
+            
+            originalVolumeSlider.minimumTrackTintColor = color
+            addSubview(originalVolumeNumberLb)
+        }
     }
     
     override func layoutSubviews() {

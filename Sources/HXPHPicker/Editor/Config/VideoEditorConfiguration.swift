@@ -91,6 +91,7 @@ extension VideoEditorConfiguration {
     public struct Music {
         /// 显示搜索
         public var showSearch: Bool = true
+        public var showOriginalSound = true
         /// 完成按钮背景颜色、搜索框光标颜色
         public var tintColor: UIColor = .systemTintColor
         /// 搜索框的 placeholder
