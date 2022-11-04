@@ -50,4 +50,9 @@ extension PhotoManager: AVAudioPlayerDelegate {
             audioPlayFinish?()
         }
     }
+    
+    public func restart() {
+        audioPlayer?.currentTime = 0
+        audioPlayer?.play()
+    }
 }
