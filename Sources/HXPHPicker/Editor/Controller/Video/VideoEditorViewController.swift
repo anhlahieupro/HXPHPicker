@@ -423,6 +423,7 @@ cancelBtn.setImage(UIImage.image(for: "hx_editor_back"), for: .normal)
                 return
             }
             
+            config.music.showLoading?()
             PhotoManager.shared.downloadTask(
                 with: music.audioURL,
                 toFile: audioTmpURL,
@@ -430,6 +431,7 @@ cancelBtn.setImage(UIImage.image(for: "hx_editor_back"), for: .normal)
             ) { [weak self] audioURL, error, ext in
                 
                 guard let self = self else { return }
+                self.config.music.hideLoading?()
                 
                 if let audioURL = audioURL, let music = ext as? VideoEditorMusic {
                     

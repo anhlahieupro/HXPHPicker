@@ -122,6 +122,9 @@ extension VideoEditorConfiguration {
         public var cellForItemAt: ((_ musics: [VideoEditorMusic],
                                     _ collectionView: UICollectionView,
                                     _ indexPath: IndexPath) -> UICollectionViewCell)?
+        
+        public var showLoading: (() -> ())?
+        public var hideLoading: (() -> ())?
             
         public init() { }
     }

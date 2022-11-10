@@ -862,11 +862,14 @@ extension VideoEditorMusicView {
             return
         }
         
+        config.showLoading?()
         PhotoManager.shared.downloadTask(
             with: music.audioURL,
             toFile: audioTmpURL,
             ext: music
         ) { audioURL, error, ext in
+            self.config.hideLoading?()
+            
             if let audioURL = audioURL {
                 
                 music.localAudioPath = audioURL.path
