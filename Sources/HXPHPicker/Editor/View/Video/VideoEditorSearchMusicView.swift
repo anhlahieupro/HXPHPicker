@@ -159,6 +159,7 @@ class VideoEditorSearchMusicView: UIView {
             collectionView.contentInsetAdjustmentBehavior = .never
         }
         collectionView.register(VideoEditorMusicViewCell.self, forCellWithReuseIdentifier: "VideoEditorMusicViewCellID")
+        self.config.registerCells?(collectionView)
         return collectionView
     }()
     lazy var noMoreView: UIView = {
@@ -331,6 +332,11 @@ extension VideoEditorSearchMusicView: UICollectionViewDataSource,
     func collectionView(
         _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+            
+        if let cell = config.cellForItemAt?(musics, collectionView, indexPath) {
+            return cell
+        }
+            
         let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: "VideoEditorMusicViewCellID",
             for: indexPath
@@ -358,14 +364,20 @@ extension VideoEditorSearchMusicView: UICollectionViewDataSource,
                 PhotoManager.shared.stopPlayMusic()
             }
         }
-        let cell = collectionView.cellForItem(at: indexPath) as! VideoEditorMusicViewCell
-        cell.playMusic { [weak self] path, music  in
-            guard let self = self else { return }
-            let shake = UIImpactFeedbackGenerator(style: .light)
-            shake.prepare()
-            shake.impactOccurred()
-            self.delegate?.searchMusicView(self, didSelectItem: path, music: music)
+            
+        if !config.customPlay {
+            let cell = collectionView.cellForItem(at: indexPath) as! VideoEditorMusicViewCell
+            cell.playMusic { [weak self] path, music  in
+                guard let self = self else { return }
+                let shake = UIImpactFeedbackGenerator(style: .light)
+                shake.prepare()
+                shake.impactOccurred()
+                self.delegate?.searchMusicView(self, didSelectItem: path, music: music)
+            }
+        } else {
+            self.delegate?.searchMusicView(self, didSelectItem: nil, music: musics[indexPath.item])
         }
+        
         currentSelectItem = indexPath.item
         finishButton.isEnabled = true
             

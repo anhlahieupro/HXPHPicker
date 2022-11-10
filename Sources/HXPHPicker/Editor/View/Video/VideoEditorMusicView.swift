@@ -36,17 +36,11 @@ public class VideoEditorMusicView: UIView {
     }()
     lazy var searchBgView: UIView = {
         let view = UIView()
+        view.backgroundColor = UIColor(hexString: "F6F7FB")
+        view.layer.cornerRadius = 5
+        view.layer.masksToBounds = true
         view.addSubview(searchButton)
         return view
-        /*
-        let visualEffect = UIBlurEffect.init(style: .light)
-        let view = UIVisualEffectView.init(effect: visualEffect)
-        view.layer.cornerRadius = 15
-        view.layer.masksToBounds = true
-        view.contentView.addSubview(searchButton)
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.2)
-        return view
-        */
     }()
     lazy var searchButton: UIButton = {
         let button = UIButton(type: .system)
@@ -55,8 +49,8 @@ public class VideoEditorMusicView: UIView {
         button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -3, bottom: 0, right: 0)
         button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 3, bottom: 0, right: 0)
         button.titleLabel?.font = .mediumPingFang(ofSize: 14)
-        button.tintColor = .white
-        button.imageView?.tintColor = .white
+        button.tintColor = UIColor(hexString: "E2E6F0")
+        button.imageView?.tintColor = UIColor(hexString: "E2E6F0")
         button.addTarget(self, action: #selector(didSearchButtonClick), for: .touchUpInside)
         return button
     }()
@@ -67,15 +61,6 @@ public class VideoEditorMusicView: UIView {
         let view = UIView()
         view.addSubview(volumeButton)
         return view
-        /*
-        let visualEffect = UIBlurEffect.init(style: .light)
-        let view = UIVisualEffectView.init(effect: visualEffect)
-        view.layer.cornerRadius = 15
-        view.layer.masksToBounds = true
-        view.contentView.addSubview(volumeButton)
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.2)
-        return view
-        */
     }()
     lazy var volumeButton: UIButton = {
         let button = UIButton(type: .system)
@@ -95,7 +80,7 @@ public class VideoEditorMusicView: UIView {
     lazy var flowLayout: UICollectionViewFlowLayout = {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .vertical
-        flowLayout.minimumLineSpacing = 15
+        flowLayout.minimumLineSpacing = 0
         flowLayout.minimumInteritemSpacing = 0
         return flowLayout
     }()
@@ -115,6 +100,7 @@ public class VideoEditorMusicView: UIView {
             collectionView.contentInsetAdjustmentBehavior = .never
         }
         collectionView.register(VideoEditorMusicViewCell.self, forCellWithReuseIdentifier: "VideoEditorMusicViewCellID")
+        self.config.registerCells?(collectionView)
         return collectionView
     }()
     
@@ -219,6 +205,8 @@ public class VideoEditorMusicView: UIView {
 
         addSubview(favoritesBgView)
         addSubview(favoritesButton)
+        
+        addSubview(collectionViewTitleLabel)
 
         if config.showSearch {
             addSubview(searchBgView)
@@ -373,46 +361,44 @@ public class VideoEditorMusicView: UIView {
             volumeButtonWidth = 65
         }
 
-//        searchBgView.frame = CGRect(x: UIDevice.leftMargin + margin,
-//                                    y: topMargin,
-//                                    width: searchButtonWidth,
-//                                    height: 30)
-
-        discoverBgView.x = UIDevice.leftMargin + margin
-        discoverBgView.y = topMargin
-
-        favoritesBgView.x = discoverBgView.frame.maxX + 4
-        favoritesBgView.y = topMargin
+        favoritesBgView.x = marginLeft
+        favoritesBgView.y = searchBgView.frame.maxY + 8
+        
+        discoverBgView.x = favoritesBgView.frame.maxX + 8
+        discoverBgView.y = searchBgView.frame.maxY + 8
+        
+        discoverButton.width = discoverBgView.width
+        favoritesButton.width = favoritesBgView.width
 
         discoverButton.center = discoverBgView.center
         favoritesButton.center = favoritesBgView.center
 
         searchBgView.frame = CGRect(
-            x: width - UIDevice.rightMargin - margin - volumeButtonWidth,
+            x: marginLeft,
             y: topMargin,
-            width: volumeButtonWidth,
+            width: contentWidth,
             height: 30
         )
         searchButton.frame = searchBgView.bounds
         
-
+        collectionViewTitleLabel.x = marginLeft
+        collectionViewTitleLabel.y = discoverBgView.frame.maxY + 8
+        
         volumeBgView.frame = CGRect(
-            x: width - UIDevice.rightMargin - margin - volumeButtonWidth,
-            y: topMargin,
+            x: searchBgView.frame.maxX - volumeButtonWidth + 10,
+            y: originalSoundButton.y,
             width: volumeButtonWidth,
             height: 30
         )
         volumeButton.frame = volumeBgView.bounds
         
+        
         pageWidth = width - margin * 2 - UIDevice.leftMargin - UIDevice.rightMargin + flowLayout.minimumLineSpacing
-        collectionView.frame = CGRect(x: 0, y: searchBgView.frame.maxY + 15, width: width, height: viewHeight - 20 - 100)
-        flowLayout.sectionInset = UIEdgeInsets(
-            top: 0,
-            left: margin + UIDevice.leftMargin,
-            bottom: 0,
-            right: margin + UIDevice.rightMargin
-        )
-        flowLayout.itemSize = CGSize(width: pageWidth - flowLayout.minimumLineSpacing, height: 90)
+        collectionView.frame = CGRect(x: 0,
+                                      y: collectionViewTitleLabel.frame.maxY + 8,
+                                      width: width,
+                                      height: viewHeight - (collectionViewTitleLabel.frame.maxY + 8) - 50)
+        flowLayout.itemSize = CGSize(width: width, height: 85)
         setBottomButtonFrame()
     }
     func setBottomButtonFrame() {
@@ -438,8 +424,8 @@ public class VideoEditorMusicView: UIView {
         let showLyricWidth = imageWidth + showLyricTextWidth + 10
         
         originalSoundButton.frame = CGRect(
-            x: 0,
-            y: backgroundButton.y,
+            x: marginLeft - 6,
+            y: collectionView.frame.maxY + 20,
             width: originalButtonWidth,
             height: buttonHeight
         )
@@ -459,24 +445,17 @@ public class VideoEditorMusicView: UIView {
             width: showLyricWidth,
             height: buttonHeight
         )
-//        if backgroundButton.x <= 0 && showLyricButton.frame.maxX >= width {
-//            backgroundButton.x = 5
-//            backgroundButton.width = originalSoundButton.x - 10
-//            showLyricButton.x = originalSoundButton.frame.maxX + 5
-//            showLyricButton.width = width - showLyricButton.x - 5
-//        }else if backgroundButton.x <= 0 || showLyricButton.frame.maxX >= width {
 
             backgroundButton.x = UIDevice.leftMargin + margin
             backgroundButton.isHidden = true
 
-            originalSoundButton.x = UIDevice.leftMargin + margin
+            originalSoundButton.x = marginLeft - 6
             volumeBgView.centerY = originalSoundButton.centerY
-            volumeBgView.x = width - volumeBgView.width - originalSoundButton.x
+            volumeBgView.x = searchBgView.frame.maxX - volumeBgView.width + 10
             volumeButton.frame = volumeBgView.bounds
 
             showLyricButton.x = originalSoundButton.frame.maxX
             showLyricButton.isHidden = true
-//        }
     }
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -486,45 +465,71 @@ public class VideoEditorMusicView: UIView {
     var isLoadMore = false
     var hasMore = true
 
-    lazy var discoverBgView: UIVisualEffectView = {
-        let visualEffect = UIBlurEffect.init(style: .light)
-        let view = UIVisualEffectView.init(effect: visualEffect)
-        view.frame = CGRect(origin: .zero, size: CGSize(width: 100, height: 30))
-        view.layer.cornerRadius = 15
-        view.layer.masksToBounds = true
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.2)
+    var marginLeft: CGFloat = 20
+    var marginRight: CGFloat = 20
+    var contentWidth: CGFloat {
+        return UIScreen.main.bounds.width - marginLeft - marginRight
+    }
+    lazy var discoverBgView: UIView = {
+        let view = UIView()
+        view.frame = CGRect(origin: .zero, size: CGSize(width: (contentWidth - 8) / 2, height: 30))
+        view.backgroundColor = .clear
         return view
     }()
-    lazy var favoritesBgView: UIVisualEffectView = {
-        let visualEffect = UIBlurEffect.init(style: .light)
-        let view = UIVisualEffectView.init(effect: visualEffect)
-        view.frame = CGRect(origin: .zero, size: CGSize(width: 100, height: 30))
-        view.layer.cornerRadius = 15
-        view.layer.masksToBounds = true
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.2)
+    lazy var favoritesBgView: UIView = {
+        let view = UIView()
+        view.frame = CGRect(origin: .zero, size: CGSize(width: (contentWidth - 8) / 2, height: 30))
+        view.backgroundColor = .clear
         view.isHidden = true
         return view
     }()
     lazy var discoverButton: UIButton = {
         let button = UIButton(frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 30)))
-        button.setTitle("Discover", for: .normal)
+        button.setTitle("Importieren".localized, for: .normal)
         button.titleLabel?.font = .mediumPingFang(ofSize: 14)
         button.tintColor = .white
         button.addTarget(self, action: #selector(didDiscoverButtonClick), for: .touchUpInside)
+        button.layer.cornerRadius = 5
+        button.layer.borderWidth = 1
+        if #available(iOS 13.0, *) {
+            button.layer.borderColor = UIColor.link.cgColor
+        } else {
+            button.layer.borderColor = UIColor.blue.cgColor
+        }
+        button.layer.masksToBounds = true
         return button
     }()
     lazy var favoritesButton: UIButton = {
         let button = UIButton(frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 30)))
-        button.setTitle("Favorites", for: .normal)
+        button.setTitle("Gespeichert".localized, for: .normal)
         button.titleLabel?.font = .mediumPingFang(ofSize: 14)
         button.tintColor = .white
         button.addTarget(self, action: #selector(didFavoritesButtonClick), for: .touchUpInside)
+        button.layer.cornerRadius = 5
+        button.layer.borderWidth = 1
+        if #available(iOS 13.0, *) {
+            button.layer.borderColor = UIColor.link.cgColor
+        } else {
+            button.layer.borderColor = UIColor.blue.cgColor
+        }
+        button.layer.masksToBounds = true
         return button
+    }()
+    lazy var collectionViewTitleLabel: UILabel = {
+        let label = UILabel(frame: CGRect(origin: .zero, size: CGSize(width: contentWidth, height: 21)))
+        label.text = "Für dich".localized
+        label.font = .mediumPingFang(ofSize: 14)
+        label.textColor = .white
+        return label
     }()
 
     @objc func didDiscoverButtonClick() {
-        discoverBgView.isHidden = false
-        favoritesBgView.isHidden = true
+        if #available(iOS 13.0, *) {
+            discoverButton.backgroundColor = .link
+        } else {
+            discoverButton.backgroundColor = .blue
+        }
+        favoritesButton.backgroundColor = .clear
 
         updateOtherMusic()
 
@@ -543,8 +548,12 @@ public class VideoEditorMusicView: UIView {
     }
 
     @objc func didFavoritesButtonClick() {
-        discoverBgView.isHidden = true
-        favoritesBgView.isHidden = false
+        discoverButton.backgroundColor = .clear
+        if #available(iOS 13.0, *) {
+            favoritesButton.backgroundColor = .link
+        } else {
+            favoritesButton.backgroundColor = .blue
+        }
 
         updateOtherMusic()
 
@@ -615,6 +624,11 @@ extension VideoEditorMusicView: UICollectionViewDataSource,
         _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
+        
+        if let cell = config.cellForItemAt?(musics, collectionView, indexPath) {
+            return cell
+        }
+        
         let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: "VideoEditorMusicViewCellID",
             for: indexPath
@@ -696,37 +710,43 @@ extension VideoEditorMusicView: UICollectionViewDataSource,
         }
         */
     }
- 
+    
     public func playMusic() {
         if selectedIndex == -1 { return }
         if currentPlayIndex == selectedIndex { return }
         stopMusic()
-        /*
-        let currentX = pageWidth * CGFloat(selectedIndex)
-        if collectionView.contentOffset.x != currentX {
-            collectionView.setContentOffset(CGPoint(x: currentX, y: 0), animated: false)
-        }
-        */
-        let cell = collectionView.cellForItem(
-            at: IndexPath(
-                item: selectedIndex,
-                section: 0
-            )
-        ) as? VideoEditorMusicViewCell
-        if cell?.music.isLoading == true {
-            return
-        }
-        cell?.playMusic(completion: { [weak self] path, music in
-            guard let self = self else { return }
-            self.backgroundButton.isSelected = true
-            let shake = UIImpactFeedbackGenerator(style: .light)
-            shake.prepare()
-            shake.impactOccurred()
-            self.delegate?.musicView(self, didSelectMusic: path)
-            if self.showLyricButton.isSelected {
-                self.delegate?.musicView(self, didShowLyricButton: true, music: music)
+        
+        if !config.customPlay {
+            /*
+            let currentX = pageWidth * CGFloat(selectedIndex)
+            if collectionView.contentOffset.x != currentX {
+                collectionView.setContentOffset(CGPoint(x: currentX, y: 0), animated: false)
             }
-        })
+            */
+            let cell = collectionView.cellForItem(
+                at: IndexPath(
+                    item: selectedIndex,
+                    section: 0
+                )
+            ) as? VideoEditorMusicViewCell
+            if cell?.music.isLoading == true {
+                return
+            }
+            cell?.playMusic(completion: { [weak self] path, music in
+                guard let self = self else { return }
+                self.backgroundButton.isSelected = true
+                let shake = UIImpactFeedbackGenerator(style: .light)
+                shake.prepare()
+                shake.impactOccurred()
+                self.delegate?.musicView(self, didSelectMusic: path)
+                if self.showLyricButton.isSelected {
+                    self.delegate?.musicView(self, didShowLyricButton: true, music: music)
+                }
+            })
+        } else {
+            customPlay(music: musics[selectedIndex])
+        }
+        
         currentPlayIndex = selectedIndex
     }
     public func stopMusic() {
@@ -739,6 +759,8 @@ extension VideoEditorMusicView: UICollectionViewDataSource,
             if beforeCell.music.isLoading == true {
                 return
             }
+            config.stop?(currentPlayIndex)
+            collectionView.reloadData()
             beforeCell.stopMusic()
         }else {
             if currentPlayIndex >= 0 && currentPlayIndex < musics.count {
@@ -746,9 +768,12 @@ extension VideoEditorMusicView: UICollectionViewDataSource,
                 PhotoManager.shared.suspendTask(currentMusic.audioURL)
                 currentMusic.isSelected = false
                 videoEditor?.otherMusic?.isSelected = false
+                config.stop?(currentPlayIndex)
+                collectionView.reloadData()
             }
             PhotoManager.shared.stopPlayMusic()
         }
+        
         currentPlayIndex = -2
         delegate?.musicView(deselectMusic: self)
     }
@@ -795,5 +820,74 @@ extension VideoEditorMusicView {
         DispatchQueue.main.async { [weak self] in
             self?.collectionView.reloadData()
         }
+    }
+}
+
+extension VideoEditorMusicView {
+    func customPlay(music: VideoEditorMusic) {
+        let completion: (String, VideoEditorMusic) -> Void = { [weak self] path, music in
+            guard let self = self else { return }
+            self.delegate?.musicView(self, didSelectMusic: path)
+        }
+        
+        if music.audioURL.isFileURL {
+            playLocalMusic(music: music, completion: completion)
+        } else {
+            playNetworkMusic(music: music, completion: completion)
+        }
+    }
+    
+    func playLocalMusic(music: VideoEditorMusic,
+                        completion: @escaping (String, VideoEditorMusic) -> Void) {
+        
+        music.localAudioPath = music.audioURL.path
+        didPlay(music: music, audioPath: music.audioURL.path)
+        music.isSelected = true
+        
+        completion(music.audioURL.path, music)
+    }
+    
+    func playNetworkMusic(music: VideoEditorMusic,
+                          completion: @escaping (String, VideoEditorMusic) -> Void) {
+        let key = music.audioURL.absoluteString
+        let audioTmpURL = PhotoTools.getAudioTmpURL(for: key)
+        
+        if PhotoTools.isCached(forAudio: key) {
+            
+            music.localAudioPath = audioTmpURL.path
+            didPlay(music: music, audioPath: audioTmpURL.path)
+            music.isSelected = true
+            
+            completion(audioTmpURL.path, music)
+            return
+        }
+        
+        PhotoManager.shared.downloadTask(
+            with: music.audioURL,
+            toFile: audioTmpURL,
+            ext: music
+        ) { audioURL, error, ext in
+            if let audioURL = audioURL {
+                
+                music.localAudioPath = audioURL.path
+                self.didPlay(music: music, audioPath: audioURL.path)
+                music.isSelected = true
+                
+                completion(audioURL.path, music)
+            } else {
+                self.resetStatus()
+            }
+        }
+    }
+    
+    func didPlay(music: VideoEditorMusic, audioPath: String) {
+        PhotoManager.shared.playMusic(filePath: audioPath) {}
+        
+        config.didPlay?(selectedIndex)
+        collectionView.reloadData()
+    }
+    
+    func resetStatus() {
+        
     }
 }

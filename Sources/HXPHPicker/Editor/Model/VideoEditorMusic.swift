@@ -51,7 +51,7 @@ public class VideoEditorMusic: Equatable, Codable {
     }
     
     var isLoading: Bool = false
-    var isSelected: Bool = false
+    public var isSelected: Bool = false
     
     var localAudioPath: String?
     var metaData: [String: String] = [:]

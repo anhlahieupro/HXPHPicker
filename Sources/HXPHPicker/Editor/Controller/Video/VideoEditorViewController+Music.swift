@@ -116,7 +116,12 @@ extension VideoEditorViewController: VideoEditorSearchMusicViewDelegate {
         _ searchMusicView: VideoEditorSearchMusicView,
         didSelectItem audioPath: String?, music: VideoEditorMusic
     ) {
-        backgroundMusicPath = audioPath
+        if audioPath != nil {
+            backgroundMusicPath = audioPath
+        } else {
+            musicView.customPlay(music: music)
+        }
+        
         otherMusic = music
         
         // musicView.reset()

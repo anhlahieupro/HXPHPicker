@@ -114,6 +114,15 @@ extension VideoEditorConfiguration {
         /// }
         public var handler: ((@escaping ([VideoEditorMusicInfo]) -> Void) -> Bool)?
         
+        public var registerCells: ((_ collectionView: UICollectionView) -> ())?
+        
+        public var customPlay = false
+        public var didPlay: ((_ currentPlayIndex: Int) -> ())?
+        public var stop: ((_ currentPlayIndex: Int) -> ())?
+        public var cellForItemAt: ((_ musics: [VideoEditorMusic],
+                                    _ collectionView: UICollectionView,
+                                    _ indexPath: IndexPath) -> UICollectionViewCell)?
+            
         public init() { }
     }
 }
