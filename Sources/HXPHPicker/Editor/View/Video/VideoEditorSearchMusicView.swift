@@ -36,11 +36,25 @@ class VideoEditorSearchMusicView: UIView {
         view.hidesWhenStopped = true
         return view
     }()
-    lazy var bgView: UIVisualEffectView = {
-        let visualEffect = UIBlurEffect.init(style: .dark)
-        let view = UIVisualEffectView.init(effect: visualEffect)
+    lazy var bgImageViewView: UIImageView = {
+        let view = UIImageView(frame: .zero)
+        view.contentMode = .scaleAspectFill
+        view.clipsToBounds = true
+        setupViewRadius(view: view, radius: 40)
         return view
     }()
+    lazy var bgView: UIVisualEffectView = {
+        let visualEffect = UIBlurEffect.init(style: .light)
+        let view = UIVisualEffectView.init(effect: visualEffect)
+        view.alpha = 0.6
+        setupViewRadius(view: view, radius: 40)
+        return view
+    }()
+    func setupViewRadius(view: UIView, radius: CGFloat) {
+        view.clipsToBounds = true
+        view.layer.cornerRadius = radius
+        view.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
+    }
     lazy var topView: UIView = {
         let view = UIView()
         view.addSubview(cancelButton)
@@ -101,12 +115,24 @@ class VideoEditorSearchMusicView: UIView {
         delegate?.searchMusicView(didFinishClick: self)
         currentSelectItem = -1
     }
-    lazy var searchBgView: UIVisualEffectView = {
-        let visualEffect = UIBlurEffect.init(style: .light)
-        let view = UIVisualEffectView.init(effect: visualEffect)
-        view.layer.cornerRadius = 10
+    
+    var marginLeft: CGFloat = 20
+    var marginRight: CGFloat = 20
+    var contentWidth: CGFloat {
+        return UIScreen.main.bounds.width - marginLeft - marginRight
+    }
+    lazy var _searchBgView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(hexString: "F6F7FB")
+        view.layer.opacity = 0.2
+        return view
+    }()
+    lazy var searchBgView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        view.layer.cornerRadius = 5
         view.layer.masksToBounds = true
-        view.alpha = 0.5
+        view.addSubview(_searchBgView)
         return view
     }()
     lazy var searchView: SearchView = {
@@ -115,7 +141,7 @@ class VideoEditorSearchMusicView: UIView {
         view.tintColor = config.tintColor
         view.attributedPlaceholder = NSAttributedString(
             string: config.placeholder.isEmpty ?
-                "搜索歌名".localized :
+                "Musik suchen …".localized :
                 config.placeholder,
             attributes: [
                 .font: UIFont.systemFont(ofSize: 17),
@@ -139,7 +165,7 @@ class VideoEditorSearchMusicView: UIView {
     lazy var flowLayout: UICollectionViewFlowLayout = {
         let flowLayout = UICollectionViewFlowLayout.init()
         flowLayout.scrollDirection = .vertical
-        flowLayout.minimumLineSpacing = 15
+        flowLayout.minimumLineSpacing = 0
         flowLayout.minimumInteritemSpacing = 0
         return flowLayout
     }()
@@ -187,6 +213,7 @@ class VideoEditorSearchMusicView: UIView {
         self.config = config
         super.init(frame: .zero)
         musics = getMusics(infos: config.infos)
+        addSubview(bgImageViewView)
         addSubview(bgView)
         addSubview(topView)
         addSubview(searchBgView)
@@ -246,12 +273,16 @@ class VideoEditorSearchMusicView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         bgView.frame = bounds
-        topView.frame = CGRect(x: 0, y: 0, width: width, height: 50)
+        bgImageViewView.frame = bounds
+        bgImageViewView.image = config.backgroundImage
+        topView.frame = CGRect(x: 0, y: 0, width: width, height: 0)
+        topView.isHidden = true
         titleLb.width = titleLb.text?.width(ofFont: titleLb.font, maxHeight: 50) ?? 0
         titleLb.height = 50
         titleLb.centerX = width * 0.5
         titleLb.y = 0
-        cancelButton.frame = CGRect(x: 12 + UIDevice.leftMargin, y: 0, width: 0, height: 50)
+        cancelButton.frame = CGRect(x: 12 + UIDevice.leftMargin, y: 0, width: 0, height: 0)
+        cancelButton.isHidden = true
         cancelButton.width = cancelButton.currentTitle?.width(ofFont: cancelButton.titleLabel!.font, maxHeight: 50) ?? 0
         finishButton.width = (
             finishButton.currentTitle?.width(
@@ -265,22 +296,25 @@ class VideoEditorSearchMusicView: UIView {
         finishButton.height = 30
         finishButton.centerY = topView.height * 0.5
         finishButton.x = width - UIDevice.rightMargin - 12 - finishButton.width
+        finishButton.isHidden = true
         
         searchView.frame = CGRect(
-            x: 12 + UIDevice.leftMargin,
-            y: topView.frame.maxY + 12,
-            width: width - 24 - UIDevice.leftMargin - UIDevice.rightMargin,
-            height: 35
+            x: marginLeft,
+            y: topView.frame.maxY + 44,
+            width: contentWidth,
+            height: 60
         )
         searchBgView.frame = searchView.frame
+        _searchBgView.frame = searchBgView.bounds
         
         setupCollectionInset()
         collectionView.frame = CGRect(
             x: 0,
             y: searchView.frame.maxY + 12,
             width: width,
-            height: height - searchView.frame.maxY - 12
+            height: height - searchView.frame.maxY - 50
         )
+        flowLayout.itemSize = CGSize(width: width, height: 85)
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -387,12 +421,12 @@ extension VideoEditorSearchMusicView: UICollectionViewDataSource,
             delegate?.searchMusicView(selectMusic: musics[indexPath.item])
             
     }
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        sizeForItemAt indexPath: IndexPath) -> CGSize {
-        CGSize(width: width - collectionView.contentInset.left - collectionView.contentInset.right, height: 90)
-    }
+//    func collectionView(
+//        _ collectionView: UICollectionView,
+//        layout collectionViewLayout: UICollectionViewLayout,
+//        sizeForItemAt indexPath: IndexPath) -> CGSize {
+//        CGSize(width: width - collectionView.contentInset.left - collectionView.contentInset.right, height: 90)
+//    }
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offsetY = scrollView.contentOffset.y
         let contentHeight = scrollView.contentSize.height

@@ -34,18 +34,26 @@ public class VideoEditorMusicView: UIView {
         let layer = PhotoTools.getGradientShadowLayer(false)
         return layer
     }()
-    lazy var searchBgView: UIView = {
+    
+    lazy var _searchBgView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(hexString: "F6F7FB")
+        view.layer.opacity = 0.2
+        return view
+    }()
+    lazy var searchBgView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
         view.layer.cornerRadius = 5
         view.layer.masksToBounds = true
+        view.addSubview(_searchBgView)
         view.addSubview(searchButton)
         return view
     }()
     lazy var searchButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage("hx_editor_video_music_search".image?.withRenderingMode(.alwaysTemplate), for: .normal)
-        button.setTitle("搜索".localized, for: .normal)
+        button.setTitle("Musik suchen …".localized, for: .normal)
         button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -3, bottom: 0, right: 0)
         button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 3, bottom: 0, right: 0)
         button.titleLabel?.font = .mediumPingFang(ofSize: 14)
@@ -190,12 +198,15 @@ public class VideoEditorMusicView: UIView {
     let config: VideoEditorConfiguration.Music
     var didEnterPlayGround = false
 
-    var viewHeight: CGFloat = UIScreen.main.bounds.height / 3
+    var viewHeight: CGFloat {
+        return UIScreen.main.bounds.height - 200
+    }
     init(config: VideoEditorConfiguration.Music, viewHeight: CGFloat) {
-        self.viewHeight = viewHeight
+        // self.viewHeight = viewHeight
         self.config = config
         super.init(frame: .zero)
         setMusics(infos: config.infos)
+        addSubview(bgImageViewView)
         addSubview(bgView)
         layer.addSublayer(bgMaskLayer)
         addSubview(collectionView)
@@ -236,12 +247,27 @@ public class VideoEditorMusicView: UIView {
             object: nil
         )
     }
-    lazy var bgView: UIVisualEffectView = {
-        let visualEffect = UIBlurEffect.init(style: .dark)
-        let view = UIVisualEffectView.init(effect: visualEffect)
+    
+    lazy var bgImageViewView: UIImageView = {
+        let view = UIImageView(frame: .zero)
+        view.contentMode = .scaleAspectFill
+        view.clipsToBounds = true
+        setupViewRadius(view: view, radius: 40)
         return view
     }()
-
+    lazy var bgView: UIVisualEffectView = {
+        let visualEffect = UIBlurEffect.init(style: .light)
+        let view = UIVisualEffectView.init(effect: visualEffect)
+        view.alpha = 0.6
+        setupViewRadius(view: view, radius: 40)
+        return view
+    }()
+    func setupViewRadius(view: UIView, radius: CGFloat) {
+        view.clipsToBounds = true
+        view.layer.cornerRadius = radius
+        view.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
+    }
+    
     @objc func appDidEnterBackground() {
         if backgroundButton.isSelected && currentPlayIndex != -2 {
             beforeIsSelect = true
@@ -339,8 +365,10 @@ public class VideoEditorMusicView: UIView {
     public override func layoutSubviews() {
         super.layoutSubviews()
         bgView.frame = bounds
+        bgImageViewView.frame = bounds
+        bgImageViewView.image = config.backgroundImage
         bgMaskLayer.frame = bounds
-        let topMargin: CGFloat = 20
+        let topMargin: CGFloat = 44
         let margin: CGFloat = 30
 
         let searchTextWidth = searchButton.currentTitle?.width(
@@ -362,10 +390,10 @@ public class VideoEditorMusicView: UIView {
         }
 
         favoritesBgView.x = marginLeft
-        favoritesBgView.y = searchBgView.frame.maxY + 8
+        favoritesBgView.y = searchBgView.frame.maxY + 20
         
         discoverBgView.x = favoritesBgView.frame.maxX + 8
-        discoverBgView.y = searchBgView.frame.maxY + 8
+        discoverBgView.y = favoritesBgView.y
         
         discoverButton.width = discoverBgView.width
         favoritesButton.width = favoritesBgView.width
@@ -377,12 +405,13 @@ public class VideoEditorMusicView: UIView {
             x: marginLeft,
             y: topMargin,
             width: contentWidth,
-            height: 30
+            height: 60
         )
+        _searchBgView.frame = searchBgView.bounds
         searchButton.frame = searchBgView.bounds
         
         collectionViewTitleLabel.x = marginLeft
-        collectionViewTitleLabel.y = discoverBgView.frame.maxY + 8
+        collectionViewTitleLabel.y = favoritesBgView.frame.maxY + 20
         
         volumeBgView.frame = CGRect(
             x: searchBgView.frame.maxX - volumeButtonWidth + 10,
@@ -397,7 +426,7 @@ public class VideoEditorMusicView: UIView {
         collectionView.frame = CGRect(x: 0,
                                       y: collectionViewTitleLabel.frame.maxY + 8,
                                       width: width,
-                                      height: viewHeight - (collectionViewTitleLabel.frame.maxY + 8) - 50)
+                                      height: viewHeight - (collectionViewTitleLabel.frame.maxY + 8) - 75)
         flowLayout.itemSize = CGSize(width: width, height: 85)
         setBottomButtonFrame()
     }

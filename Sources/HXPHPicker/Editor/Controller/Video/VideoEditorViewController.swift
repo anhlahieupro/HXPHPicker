@@ -219,11 +219,13 @@ open class VideoEditorViewController: BaseViewController {
         let view = VideoEditorMusicView.init(config: config.music, viewHeight: musicViewHeight)
         view.videoEditor = self
         view.delegate = self
+        view.clipsToBounds = true
         return view
     }()
     lazy var searchMusicView: VideoEditorSearchMusicView = {
         let view = VideoEditorSearchMusicView(config: config.music)
         view.delegate = self
+        view.clipsToBounds = true
         return view
     }()
     lazy var volumeView: VideoEditorVolumeView = {
@@ -915,14 +917,16 @@ extension VideoEditorViewController {
     func setMusicViewFrame() {
         let marginHeight: CGFloat = musicViewHeight
         let musicY: CGFloat
-        let musicHeight: CGFloat
+        
+        let screenHeight = UIScreen.main.bounds.height
+        let musicHeight: CGFloat = screenHeight - 200
+        
         if !isMusicState {
-            musicY = view.height
-            musicHeight = marginHeight + UIDevice.bottomMargin
+            musicY = screenHeight
         }else {
-            musicY = view.height - marginHeight - UIDevice.bottomMargin
-            musicHeight = marginHeight + UIDevice.bottomMargin
+            musicY = screenHeight - musicHeight
         }
+        
         musicView.frame = CGRect(
             x: 0,
             y: musicY,
@@ -972,10 +976,7 @@ extension VideoEditorViewController {
         }
     }
     func setSearchMusicViewFrame() {
-        var viewHeight: CGFloat = view.height * 0.75 + UIDevice.bottomMargin
-        if !UIDevice.isPad && !UIDevice.isPortrait {
-            viewHeight = view.height * 0.85 + UIDevice.bottomMargin
-        }
+        var viewHeight: CGFloat = UIScreen.main.bounds.height - 200
         if !isSearchMusic {
             searchMusicView.frame = CGRect(x: 0, y: view.height, width: view.width, height: viewHeight)
         }else {

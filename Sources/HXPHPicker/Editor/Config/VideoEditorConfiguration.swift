@@ -125,6 +125,7 @@ extension VideoEditorConfiguration {
         
         public var showLoading: (() -> ())?
         public var hideLoading: (() -> ())?
+        public var backgroundImage: UIImage?
             
         public init() { }
     }
