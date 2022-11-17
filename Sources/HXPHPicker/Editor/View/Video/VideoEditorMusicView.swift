@@ -50,17 +50,48 @@ public class VideoEditorMusicView: UIView {
         view.addSubview(searchButton)
         return view
     }()
-    lazy var searchButton: UIButton = {
+    lazy var searchButton: UIView = {
+        let view = UIView()
+        
+        let label = UILabel()
+        label.text = "Musik suchen …".localized
+        label.textColor = UIColor(hexString: "E2E6F0")
+        label.font = .mediumPingFang(ofSize: 14)
+        
+        let imageView = UIImageView(image: "hx_editor_video_music_search".image?.withRenderingMode(.alwaysTemplate))
+        imageView.contentMode = .scaleAspectFit
+        imageView.width = 20
+        imageView.tintColor = UIColor(hexString: "E2E6F0")
+        
+        let stackView = UIStackView()
+        stackView.addArrangedSubview(label)
+        stackView.addArrangedSubview(imageView)
+        stackView.spacing = 5
+        
         let button = UIButton(type: .system)
-        button.setImage("hx_editor_video_music_search".image?.withRenderingMode(.alwaysTemplate), for: .normal)
-        button.setTitle("Musik suchen …".localized, for: .normal)
-        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -3, bottom: 0, right: 0)
-        button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 3, bottom: 0, right: 0)
-        button.titleLabel?.font = .mediumPingFang(ofSize: 14)
-        button.tintColor = UIColor(hexString: "E2E6F0")
-        button.imageView?.tintColor = UIColor(hexString: "E2E6F0")
         button.addTarget(self, action: #selector(didSearchButtonClick), for: .touchUpInside)
-        return button
+        
+        view.addSubview(stackView)
+        view.addSubview(button)
+                
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        stackView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+        stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
+        
+        button.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        button.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        button.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        button.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        
+        imageView.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        imageView.heightAnchor.constraint(equalTo: stackView.heightAnchor).isActive = true
+        
+        return view
     }()
     @objc func didSearchButtonClick() {
         delegate?.musicView(didSearchButton: self)
@@ -371,14 +402,14 @@ public class VideoEditorMusicView: UIView {
         let topMargin: CGFloat = 44
         let margin: CGFloat = 30
 
-        let searchTextWidth = searchButton.currentTitle?.width(
-            ofFont: UIFont.mediumPingFang(ofSize: 14),
-            maxHeight: 30
-        ) ?? 0
-        var searchButtonWidth = searchTextWidth + (searchButton.currentImage?.width ?? 0) + 20
-        if searchButtonWidth < 65 {
-            searchButtonWidth = 65
-        }
+//        let searchTextWidth = searchButton.currentTitle?.width(
+//            ofFont: UIFont.mediumPingFang(ofSize: 14),
+//            maxHeight: 30
+//        ) ?? 0
+//        var searchButtonWidth = searchTextWidth + (searchButton.currentImage?.width ?? 0) + 20
+//        if searchButtonWidth < 65 {
+//            searchButtonWidth = 65
+//        }
 
         let volumeTextWidth = volumeButton.currentTitle?.width(
             ofFont: UIFont.mediumPingFang(ofSize: 14),

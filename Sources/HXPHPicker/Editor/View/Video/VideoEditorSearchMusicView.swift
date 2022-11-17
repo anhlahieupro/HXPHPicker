@@ -7,6 +7,19 @@
 
 import UIKit
 
+extension UITextField {
+    @IBInspectable var placeHolderColor: UIColor? {
+        get {
+            return self.placeHolderColor
+        }
+        
+        set {
+            self.attributedPlaceholder = NSAttributedString(string:self.placeholder != nil ? self.placeholder! : "",
+                                                            attributes:[NSAttributedString.Key.foregroundColor: newValue!])
+        }
+    }
+}
+
 protocol VideoEditorSearchMusicViewDelegate: AnyObject {
     func searchMusicView(didCancelClick searchMusicView: VideoEditorSearchMusicView)
     func searchMusicView(didFinishClick searchMusicView: VideoEditorSearchMusicView)
@@ -135,31 +148,45 @@ class VideoEditorSearchMusicView: UIView {
         view.addSubview(_searchBgView)
         return view
     }()
-    lazy var searchView: SearchView = {
-        let view = SearchView()
-        view.textColor = .white
-        view.tintColor = config.tintColor
-        view.attributedPlaceholder = NSAttributedString(
-            string: config.placeholder.isEmpty ?
-                "Musik suchen …".localized :
-                config.placeholder,
-            attributes: [
-                .font: UIFont.systemFont(ofSize: 17),
-                .foregroundColor: UIColor.white.withAlphaComponent(0.4)
-            ]
-        )
-        view.font = .systemFont(ofSize: 17)
-        view.clearButtonMode = .whileEditing
-        view.returnKeyType = .search
-        let searchIcon = UIImageView()
-        searchIcon.image = "hx_editor_video_music_search".image?.withRenderingMode(.alwaysTemplate)
-        searchIcon.tintColor = .white.withAlphaComponent(0.4)
-        searchIcon.size = searchIcon.image?.size ?? .zero
-        view.leftView = searchIcon
-        view.leftViewMode = .always
-        view.layer.cornerRadius = 10
-        view.layer.masksToBounds = true
-        view.delegate = self
+    lazy var searchTextField: UITextField = {
+        let textField = UITextField()
+        textField.placeholder = "Musik suchen …".localized
+        textField.textColor = UIColor(hexString: "E2E6F0")
+        textField.placeHolderColor = UIColor(hexString: "E2E6F0")
+        textField.font = .mediumPingFang(ofSize: 14)
+        textField.borderStyle = .none
+        textField.delegate = self
+        textField.returnKeyType = .search
+        return textField
+    }()
+    lazy var searchView: UIView = {
+        let view = UIView()
+        
+        let label = searchTextField
+        
+        let imageView = UIImageView(image: "hx_editor_video_music_search".image?.withRenderingMode(.alwaysTemplate))
+        imageView.contentMode = .scaleAspectFit
+        imageView.width = 20
+        imageView.tintColor = UIColor(hexString: "E2E6F0")
+        
+        let stackView = UIStackView()
+        stackView.addArrangedSubview(label)
+        stackView.addArrangedSubview(imageView)
+        stackView.spacing = 5
+        
+        view.addSubview(stackView)
+                
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        stackView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+        stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
+        
+        imageView.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        imageView.heightAnchor.constraint(equalTo: stackView.heightAnchor).isActive = true
+        
         return view
     }()
     lazy var flowLayout: UICollectionViewFlowLayout = {
@@ -247,7 +274,7 @@ class VideoEditorSearchMusicView: UIView {
         finishButton.isEnabled = false
     }
     func clearData() {
-        searchView.text = nil
+        searchTextField.text = nil
         musics.removeAll()
         stopLoading()
         removeNoMore()
@@ -437,7 +464,7 @@ extension VideoEditorSearchMusicView: UICollectionViewDataSource,
                 startLoading(isMore: true)
                 delegate?.searchMusicView(
                     self,
-                    loadMore: searchView.text,
+                    loadMore: searchTextField.text,
                     completion: { [weak self] musicInfos, hasMore in
                     guard let self = self else { return }
                     self.stopLoading()
