@@ -138,6 +138,9 @@ class VideoEditorPlayerView: VideoPlayerView {
                 guard let self = self, isFinished else {
                     return
                 }
+                
+                PhotoManager.shared.restart()
+                
                 self.play()
                 completion?(self.player.currentTime())
             }
