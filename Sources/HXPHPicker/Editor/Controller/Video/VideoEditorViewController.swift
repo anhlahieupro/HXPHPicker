@@ -978,9 +978,15 @@ extension VideoEditorViewController {
     func setSearchMusicViewFrame() {
         var viewHeight: CGFloat = UIScreen.main.bounds.height - 200
         if !isSearchMusic {
-            searchMusicView.frame = CGRect(x: 0, y: view.height, width: view.width, height: viewHeight)
+            let hideFrame = CGRect(x: 0, y: view.height, width: view.width, height: viewHeight)
+            searchMusicView.frame = hideFrame
         }else {
-            searchMusicView.frame = CGRect(x: 0, y: view.height - viewHeight, width: view.width, height: viewHeight)
+            let showFrame = CGRect(x: 0, y: view.height - viewHeight, width: view.width, height: viewHeight)
+            if showFrame != searchMusicView.frame {
+                searchMusicView.searchTextField.becomeFirstResponder()
+            }
+            
+            searchMusicView.frame = showFrame
         }
     }
     func setVolumeViewFrame() {

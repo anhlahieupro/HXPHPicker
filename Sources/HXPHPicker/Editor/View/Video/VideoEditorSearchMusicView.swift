@@ -150,13 +150,18 @@ class VideoEditorSearchMusicView: UIView {
     }()
     lazy var searchTextField: UITextField = {
         let textField = UITextField()
+        textField.delegate = self
+        
         textField.placeholder = "Musik suchen …".localized
-        textField.textColor = UIColor(hexString: "E2E6F0")
         textField.placeHolderColor = UIColor(hexString: "E2E6F0")
+        
+        textField.textColor = UIColor(hexString: "E2E6F0")
+        textField.tintColor = .white
+        
         textField.font = .mediumPingFang(ofSize: 14)
         textField.borderStyle = .none
-        textField.delegate = self
         textField.returnKeyType = .search
+        
         return textField
     }()
     lazy var searchView: UIView = {
