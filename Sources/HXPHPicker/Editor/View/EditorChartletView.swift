@@ -70,11 +70,11 @@ class EditorChartletView: UIView {
             view.contentInsetAdjustmentBehavior = .never
         }
         view.register(EditorChartletViewCell.self, forCellWithReuseIdentifier: "EditorChartletViewCellTitleID")
-        let pan = UIPanGestureRecognizer(
-            target: self,
-            action: #selector(titleBgViewPanGestureRecognizerClick(pan:))
-        )
-        view.addGestureRecognizer(pan)
+//        let pan = UIPanGestureRecognizer(
+//            target: self,
+//            action: #selector(titleBgViewPanGestureRecognizerClick(pan:))
+//        )
+//        view.addGestureRecognizer(pan)
         return view
     }()
     var initialY: CGFloat = 0
@@ -267,7 +267,7 @@ class EditorChartletView: UIView {
         titleBgView.frame = CGRect(x: 0, y: 0, width: width, height: 50)
         backButton.frame = CGRect(x: width - 50 - UIDevice.rightMargin, y: 0, width: 50, height: 50)
         bgView.frame = CGRect(x: 0, y: titleBgView.frame.maxY, width: width, height: height - titleBgView.height)
-        titleView.frame = CGRect(x: 0, y: 0, width: width, height: 50)
+        titleView.frame = CGRect(x: 0, y: 0, width: width - backButton.frame.width - 10, height: 50)
         titleView.contentInset = UIEdgeInsets(
             top: 5,
             left: 15 + UIDevice.leftMargin,
