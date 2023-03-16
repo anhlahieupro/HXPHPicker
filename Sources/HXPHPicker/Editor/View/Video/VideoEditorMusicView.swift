@@ -225,7 +225,10 @@ public class VideoEditorMusicView: UIView {
     var selectedIndex: Int = -1
     var currentPlayIndex: Int = -2
     var beforeIsSelect = false
+    
     var musics: [VideoEditorMusic] = []
+    private var _musics: [VideoEditorMusic] = []
+    
     let config: VideoEditorConfiguration.Music
     var didEnterPlayGround = false
 
@@ -582,8 +585,11 @@ public class VideoEditorMusicView: UIView {
         label.textColor = .white
         return label
     }()
+    var isFavorites = false
 
     @objc func didDiscoverButtonClick() {
+        isFavorites = false
+        
         if #available(iOS 13.0, *) {
             discoverButton.backgroundColor = .link
         } else {
@@ -608,6 +614,8 @@ public class VideoEditorMusicView: UIView {
     }
 
     @objc func didFavoritesButtonClick() {
+        isFavorites = true
+        
         discoverButton.backgroundColor = .clear
         if #available(iOS 13.0, *) {
             favoritesButton.backgroundColor = .link
@@ -645,9 +653,15 @@ public class VideoEditorMusicView: UIView {
                             musicInfos: [VideoEditorMusicInfo],
                             hasMore: Bool) {
         
-        if let otherMusic = otherMusic {
-            otherMusic.isOtherMusic = true
-            otherMusic.isSelected = true
+        otherMusic?.isOtherMusic = true
+        otherMusic?.isSelected = true
+        
+        if isFavorites {
+            selectedIndex = -1
+            currentPlayIndex = -1
+        }
+        
+        if let otherMusic = otherMusic, !isFavorites {
             
             selectedIndex = 0
             currentPlayIndex = 0
@@ -655,18 +669,36 @@ public class VideoEditorMusicView: UIView {
             self.musics.append(otherMusic)
         }
         
-        for musicInfo in musicInfos
-        where musicInfo.audioURL.absoluteString != otherMusic?.audioURL.absoluteString {
+        for (index, musicInfo) in musicInfos.enumerated() {
             
             let music = VideoEditorMusic(
                 audioURL: musicInfo.audioURL,
                 lrc: musicInfo.lrc,
                 other: musicInfo.other
             )
-
-            self.musics.append(music)
+            
+            if !isFavorites {
+                if musicInfo.audioURL.absoluteString != otherMusic?.audioURL.absoluteString {
+                    self.musics.append(music)
+                }
+                                
+            } else {
+                
+                if music.audioURL.absoluteString == otherMusic?.audioURL.absoluteString {
+                    music.isOtherMusic = true
+                    music.isSelected = true
+                    
+                    selectedIndex = index
+                    currentPlayIndex = index
+                }
+                
+                self.musics.append(music)
+            }
         }
 
+        self._musics.removeAll()
+        self._musics.append(contentsOf: self.musics)
+        
         self.collectionView.reloadData()
 
         self.hasMore = hasMore
@@ -863,11 +895,20 @@ extension VideoEditorMusicView {
 
 extension VideoEditorMusicView {
     public func searchMusicViewDidSelectItem() {
+        if isFavorites {
+            selectedIndex = -1
+            currentPlayIndex = -1
+        }
+        
+        musics.removeAll()
+        musics.append(contentsOf: _musics)
+        
         musics.filter({ $0.isSelected }).forEach { $0.isSelected = false }
+        
         musics.removeAll(where: { $0.isOtherMusic
             || $0.audioURL.absoluteString == videoEditor?.otherMusic?.audioURL.absoluteString })
         
-        if let otherMusic = videoEditor?.otherMusic {
+        if let otherMusic = videoEditor?.otherMusic, !isFavorites {
             
             otherMusic.isOtherMusic = true
             otherMusic.isSelected = true
