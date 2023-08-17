@@ -50,6 +50,11 @@ class VideoEditorPlayerView: VideoPlayerView {
             playerItem.videoComposition = videoComposition(avAsset)
             player.replaceCurrentItem(with: playerItem)
             playerLayer.player = player
+            
+            // MARK: - PROS
+            playStartTime = CMTime(seconds: 0, preferredTimescale: 1)
+            playEndTime = CMTime(seconds: avAsset.duration.seconds, preferredTimescale: 1)
+            
             NotificationCenter.default.addObserver(
                 self,
                 selector: #selector(appDidEnterBackground),
