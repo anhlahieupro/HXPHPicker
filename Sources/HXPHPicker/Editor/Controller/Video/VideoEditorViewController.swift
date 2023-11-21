@@ -216,9 +216,11 @@ open class VideoEditorViewController: BaseViewController {
 
     var musicViewHeight: CGFloat = UIScreen.main.bounds.height / 2
     lazy var musicView: VideoEditorMusicView = {
-        let view = VideoEditorMusicView.init(config: config.music, viewHeight: musicViewHeight)
-        view.videoEditor = self
-        view.delegate = self
+        let view = VideoEditorMusicView.init(config: config.music, viewHeight: musicViewHeight,
+                                             videoEditor: self,
+                                             delegate: self)
+        // view.videoEditor = self
+        // view.delegate = self
         view.clipsToBounds = true
         return view
     }()

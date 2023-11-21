@@ -235,9 +235,14 @@ public class VideoEditorMusicView: UIView {
     var viewHeight: CGFloat {
         return UIScreen.main.bounds.height - 200
     }
-    init(config: VideoEditorConfiguration.Music, viewHeight: CGFloat) {
+    init(config: VideoEditorConfiguration.Music, viewHeight: CGFloat,
+         videoEditor: VideoEditorViewController?,
+         delegate: VideoEditorMusicViewDelegate?
+    ) {
         // self.viewHeight = viewHeight
         self.config = config
+        self.videoEditor = videoEditor
+        self.delegate = delegate
         super.init(frame: .zero)
         setMusics(infos: config.infos)
         addSubview(bgImageViewView)
