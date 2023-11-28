@@ -20,7 +20,10 @@ extension PhotoManager: AVAudioPlayerDelegate {
             return true
         }
         do {
-            try audioSession.setCategory(.playAndRecord)
+            try audioSession.setCategory(.playback)
+        } catch { }
+        
+        do {
             audioPlayer = try AVAudioPlayer(contentsOf: url)
             audioPlayer?.delegate = self
             audioPlayer?.prepareToPlay()
