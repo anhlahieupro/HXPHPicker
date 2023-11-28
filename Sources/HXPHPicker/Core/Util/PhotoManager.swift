@@ -85,6 +85,9 @@ public final class PhotoManager: NSObject {
     #if HXPICKER_ENABLE_EDITOR
     lazy var audioSession: AVAudioSession = {
         let session = AVAudioSession.sharedInstance()
+        do {
+            try session.setCategory(.playback)
+        } catch { }
         return session
     }()
     var audioPlayer: AVAudioPlayer?

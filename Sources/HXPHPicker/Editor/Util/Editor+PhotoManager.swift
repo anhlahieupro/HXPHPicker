@@ -19,14 +19,16 @@ extension PhotoManager: AVAudioPlayerDelegate {
             audioPlayer?.play()
             return true
         }
-        do {
-            try audioSession.setCategory(.playback)
-        } catch { }
+        
+        if audioSession.category != .playback {
+            do { try audioSession.setCategory(.playback) } catch { }
+        }
         
         do {
             audioPlayer = try AVAudioPlayer(contentsOf: url)
             audioPlayer?.delegate = self
             audioPlayer?.prepareToPlay()
+            audioPlayer?.currentTime = 0
             audioPlayer?.play()
             return true
         } catch {

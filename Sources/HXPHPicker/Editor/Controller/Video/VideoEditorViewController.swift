@@ -414,7 +414,9 @@ cancelBtn.setImage(UIImage.image(for: "hx_editor_back"), for: .normal)
             
             if PhotoTools.isCached(forAudio: key) {
                 
-                PhotoManager.shared.playMusic(filePath: audioTmpURL.path) { }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    PhotoManager.shared.playMusic(filePath: audioTmpURL.path) { }
+                }
                 
                 music.isOtherMusic = true
                 music.isSelected = true
@@ -439,7 +441,9 @@ cancelBtn.setImage(UIImage.image(for: "hx_editor_back"), for: .normal)
                 
                 if let audioURL = audioURL, let music = ext as? VideoEditorMusic {
                     
-                    PhotoManager.shared.playMusic(filePath: audioURL.path) { }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        PhotoManager.shared.playMusic(filePath: audioTmpURL.path) { }
+                    }
                     
                     music.isOtherMusic = true
                     music.isSelected = true
