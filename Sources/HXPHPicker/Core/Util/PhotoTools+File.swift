@@ -38,6 +38,10 @@ public extension PhotoTools {
         return folderSize
     }
     
+    static func getTempCacheFolderPath() -> String {
+        return FileManager.tempPath
+    }
+    
     /// 获取图片缓存文件夹路径
     static func getImageCacheFolderPath() -> String {
         var cachePath = FileManager.cachesPath
@@ -77,9 +81,15 @@ public extension PhotoTools {
     
     /// 删除缓存
     static func removeCache() {
+        removeTempCache()
         removeVideoCache()
         removeImageCache()
         removeAudioCache()
+    }
+    
+    @discardableResult
+    static func removeTempCache() -> Bool {
+        return FileManager.removeTempCache()
     }
     
     /// 删除视频缓存
