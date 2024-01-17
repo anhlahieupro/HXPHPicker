@@ -29,7 +29,7 @@ extension PhotoEditorViewController: EditorStickerTextViewControllerDelegate {
 }
 
 extension PhotoEditorViewController: EditorChartletViewDelegate {
-    func chartletView(
+    public func chartletView(
         _ chartletView: EditorChartletView,
         loadTitleChartlet response: @escaping ([EditorChartlet]) -> Void
     ) {
@@ -47,10 +47,10 @@ extension PhotoEditorViewController: EditorChartletViewDelegate {
             #endif
         }
     }
-    func chartletView(backClick chartletView: EditorChartletView) {
+    public func chartletView(backClick chartletView: EditorChartletView) {
         singleTap()
     }
-    func chartletView(
+    public func chartletView(
         _ chartletView: EditorChartletView,
         titleChartlet: EditorChartlet,
         titleIndex: Int,
@@ -73,7 +73,7 @@ extension PhotoEditorViewController: EditorChartletViewDelegate {
             #endif
         }
     }
-    func chartletView(
+    public func chartletView(
         _ chartletView: EditorChartletView,
         didSelectImage image: UIImage,
         imageData: Data?

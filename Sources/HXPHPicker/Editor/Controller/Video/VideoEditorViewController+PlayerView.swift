@@ -120,11 +120,11 @@ extension VideoEditorViewController: PhotoEditorBrushColorViewDelegate {
 }
 
 extension VideoEditorViewController: EditorChartletViewDelegate {
-    func chartletView(backClick chartletView: EditorChartletView) {
+    public func chartletView(backClick chartletView: EditorChartletView) {
         singleTap()
     }
     
-    func chartletView(
+    public func chartletView(
         _ chartletView: EditorChartletView,
         loadTitleChartlet response: @escaping EditorTitleChartletResponse
     ) {
@@ -143,7 +143,7 @@ extension VideoEditorViewController: EditorChartletViewDelegate {
         }
     }
     
-    func chartletView(
+    public func chartletView(
         _ chartletView: EditorChartletView,
         titleChartlet: EditorChartlet,
         titleIndex: Int,
@@ -167,7 +167,7 @@ extension VideoEditorViewController: EditorChartletViewDelegate {
         }
     }
     
-    func chartletView(
+    public func chartletView(
         _ chartletView: EditorChartletView,
         didSelectImage image: UIImage,
         imageData: Data?

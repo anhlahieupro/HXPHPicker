@@ -10,7 +10,7 @@ import UIKit
 import Kingfisher
 #endif
 
-protocol EditorChartletViewDelegate: AnyObject {
+public protocol EditorChartletViewDelegate: AnyObject {
     func chartletView(backClick chartletView: EditorChartletView)
     func chartletView(
         _ chartletView: EditorChartletView,
@@ -25,8 +25,8 @@ protocol EditorChartletViewDelegate: AnyObject {
     func chartletView(_ chartletView: EditorChartletView, didSelectImage image: UIImage, imageData: Data?)
 }
 
-class EditorChartletView: UIView {
-    weak var delegate: EditorChartletViewDelegate?
+public class EditorChartletView: UIView {
+    public weak var delegate: EditorChartletViewDelegate?
     lazy var loadingView: UIActivityIndicatorView = {
         let view = UIActivityIndicatorView(style: .white)
         view.hidesWhenStopped = true
@@ -134,7 +134,7 @@ class EditorChartletView: UIView {
     var titles: [EditorChartletTitle] = []
     var selectedTitleIndex: Int = 0
     var configTitles: [EditorChartlet] = []
-    init(
+    public init(
         config: EditorChartletConfiguration,
         editorType: EditorController.EditorType
     ) {
@@ -262,7 +262,7 @@ class EditorChartletView: UIView {
         }
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         titleBgView.frame = CGRect(x: 0, y: 0, width: width, height: 50)
         backButton.frame = CGRect(x: width - 50 - UIDevice.rightMargin, y: 0, width: 50, height: 50)
@@ -287,7 +287,7 @@ extension EditorChartletView: UICollectionViewDataSource,
                               UICollectionViewDelegate,
                               UICollectionViewDelegateFlowLayout,
                               EditorChartletViewListCellDelegate {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         #if HXPICKER_ENABLE_PICKER
         if config.allowAddAlbum && !titles.isEmpty {
             if collectionView == listView {
@@ -298,7 +298,7 @@ extension EditorChartletView: UICollectionViewDataSource,
         return titles.count
     }
     
-    func collectionView(
+    public func collectionView(
         _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
@@ -323,7 +323,7 @@ extension EditorChartletView: UICollectionViewDataSource,
         }
     }
     
-    func collectionView(
+    public func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
@@ -334,7 +334,7 @@ extension EditorChartletView: UICollectionViewDataSource,
             return listView.size
         }
     }
-    func collectionView(
+    public func collectionView(
         _ collectionView: UICollectionView,
         willDisplay cell: UICollectionViewCell,
         forItemAt indexPath: IndexPath
@@ -354,7 +354,7 @@ extension EditorChartletView: UICollectionViewDataSource,
         let listCell = cell as! EditorChartletViewListCell
         listCell.startLoading()
     }
-    func collectionView(
+    public func collectionView(
         _ collectionView: UICollectionView,
         didEndDisplaying cell: UICollectionViewCell,
         forItemAt indexPath: IndexPath
@@ -365,7 +365,7 @@ extension EditorChartletView: UICollectionViewDataSource,
         let listCell = cell as! EditorChartletViewListCell
         listCell.stopLoad()
     }
-    func collectionView(
+    public func collectionView(
         _ collectionView: UICollectionView,
         didSelectItemAt indexPath: IndexPath
     ) {
@@ -397,7 +397,7 @@ extension EditorChartletView: UICollectionViewDataSource,
             requestData(index: indexPath.item)
         }
     }
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView != listView {
             return
         }
@@ -422,7 +422,7 @@ extension EditorChartletView: UICollectionViewDataSource,
         
         selectedTitleIndex = currentIndex
     }
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         if scrollView != listView {
             return
         }
