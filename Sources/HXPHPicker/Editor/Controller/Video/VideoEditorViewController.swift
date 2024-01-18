@@ -456,6 +456,7 @@ cancelBtn.setImage(UIImage.image(for: "hx_editor_back"), for: .normal)
             }
         }
         
+        videoView.playerView.player.seek(to: CMTime(seconds: 0.1, preferredTimescale: 1))
     }
     func initOptions() {
         for options in config.toolView.toolOptions {
