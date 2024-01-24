@@ -407,56 +407,63 @@ cancelBtn.setImage(UIImage.image(for: "hx_editor_back"), for: .normal)
         super.viewDidLoad()
         initView()
         
-        if let music = otherMusic {
-            let key = music.audioURL.absoluteString
-            
-            let audioTmpURL = PhotoTools.getAudioTmpURL(for: key)
-            
-            if PhotoTools.isCached(forAudio: key) {
+        let endTime = CMTime(seconds: avAsset.duration.seconds - 0.3,
+                             preferredTimescale: avAsset.duration.timescale)
+        
+        self.videoView.playerView.seek(to: endTime) { [weak self] _ in
+            self?.handlePlayOtherMusic()
+        }
+    }
+    private func handlePlayOtherMusic() {
+        guard let music = otherMusic else { return }
+        
+        let key = music.audioURL.absoluteString
+        
+        let audioTmpURL = PhotoTools.getAudioTmpURL(for: key)
+        
+        func play(audioTmpURL: URL, music: VideoEditorMusic) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
+                PhotoManager.shared.playMusic(filePath: audioTmpURL.path) { }
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                    PhotoManager.shared.playMusic(filePath: audioTmpURL.path) { }
-                }
-                
-                music.isOtherMusic = true
-                music.isSelected = true
-                
-                music.localAudioPath = audioTmpURL.path
-                
-                self.backgroundMusicPath = audioTmpURL.path
-                self.musicView.searchMusicViewDidSelectItem()
-                
-                return
-            }
-            
-            config.music.showLoading?()
-            PhotoManager.shared.downloadTask(
-                with: music.audioURL,
-                toFile: audioTmpURL,
-                ext: music
-            ) { [weak self] audioURL, error, ext in
-                
-                guard let self = self else { return }
-                self.config.music.hideLoading?()
-                
-                if let audioURL = audioURL, let music = ext as? VideoEditorMusic {
+                if let self = self, 
+                    (!self.videoView.playerView.isPlaying || !self.videoView.playerView.player.isPlaying) {
                     
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                        PhotoManager.shared.playMusic(filePath: audioTmpURL.path) { }
-                    }
+                    self.videoView.playerView.player.play()
+                    self.videoView.playerView.isPlaying = true
                     
-                    music.isOtherMusic = true
-                    music.isSelected = true
-                    
-                    music.localAudioPath = audioTmpURL.path
-                    
-                    self.backgroundMusicPath = audioTmpURL.path
-                    self.musicView.searchMusicViewDidSelectItem()
+                    let currentTime = self.videoView.playerView.player.currentTime()
+                    self.videoView.playerView.delegate?.playerView(self.videoView.playerView,
+                                                                   didPlayAt: currentTime)
                 }
             }
+            
+            music.isOtherMusic = true
+            music.isSelected = true
+            
+            music.localAudioPath = audioTmpURL.path
+            
+            self.backgroundMusicPath = audioTmpURL.path
+            self.musicView.searchMusicViewDidSelectItem()
         }
         
-        startPlay(at: .zero)
+        if PhotoTools.isCached(forAudio: key) {
+            play(audioTmpURL: audioTmpURL, music: music)
+            return
+        }
+        
+        config.music.showLoading?()
+        PhotoManager.shared.downloadTask(
+            with: music.audioURL,
+            toFile: audioTmpURL,
+            ext: music
+        ) { [weak self] audioURL, error, ext in
+            
+            self?.config.music.hideLoading?()
+            
+            if let audioURL = audioURL, let music = ext as? VideoEditorMusic {
+                play(audioTmpURL: audioURL, music: music)
+            }
+        }
     }
     func initOptions() {
         for options in config.toolView.toolOptions {

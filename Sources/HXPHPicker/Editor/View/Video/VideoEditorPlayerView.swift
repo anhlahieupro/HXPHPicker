@@ -52,8 +52,8 @@ class VideoEditorPlayerView: VideoPlayerView {
             playerLayer.player = player
             
             // MARK: - PROS
-            playStartTime = CMTime(seconds: 0, preferredTimescale: 1)
-            playEndTime = CMTime(seconds: avAsset.duration.seconds, preferredTimescale: 1)
+            playStartTime = CMTime(seconds: 0, preferredTimescale: avAsset.duration.timescale)
+            playEndTime = CMTime(seconds: avAsset.duration.seconds, preferredTimescale: avAsset.duration.timescale)
             
             NotificationCenter.default.addObserver(
                 self,

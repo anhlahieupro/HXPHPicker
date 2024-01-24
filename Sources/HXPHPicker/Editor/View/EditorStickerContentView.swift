@@ -192,7 +192,7 @@ class EditorStickerContentView: UIView {
             CATransaction.begin()
             CATransaction.setDisableActions(true)
             if let player = PhotoManager.shared.audioPlayer {
-                textLayer.string = item.music?.lyric(atTime: player.currentTime)?.lyric
+                textLayer.string = item.music?.lyric(atTime: TimeInterval(player.currentTime().seconds))?.lyric
             }else {
                 textLayer.string = item.music?.lyric(atTime: 0)?.lyric
             }
@@ -216,7 +216,7 @@ class EditorStickerContentView: UIView {
             withTimeInterval: 0.5,
             repeats: true, block: { [weak self] timer in
                 if let player = PhotoManager.shared.audioPlayer {
-                    let lyric = self?.item.music?.lyric(atTime: player.currentTime)
+                    let lyric = self?.item.music?.lyric(atTime: TimeInterval(player.currentTime().seconds))
                     if let str = self?.textLayer.string as? String,
                        let lyricStr = lyric?.lyric,
                        str == lyricStr {

@@ -90,7 +90,7 @@ public final class PhotoManager: NSObject {
         } catch { }
         return session
     }()
-    var audioPlayer: AVAudioPlayer?
+    var audioPlayer: AVPlayer? // AVAudioPlayer?
     var audioPlayFinish: (() -> Void)?
     #endif
     
